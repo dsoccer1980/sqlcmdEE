@@ -286,10 +286,10 @@ public class IntegrationTest {
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //create|users|id|13|name|Stiven|password|*****
-                "Запись {names:[id, name, password], values:[13, Stiven, *****]} в таблице users была успешно создана.\r\n" +
+                "Запись {names:[id, name, password], values:[13, Stiven, *****]} в таблице 'users' была успешно создана.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //create|users|id|14|name|Eva|password|+++++
-                "Запись {names:[id, name, password], values:[14, Eva, +++++]} в таблице users была успешно создана.\r\n" +
+                "Запись {names:[id, name, password], values:[14, Eva, +++++]} в таблице 'users' была успешно создана.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //find|users
                 "-----------------\r\n" +
@@ -298,6 +298,50 @@ public class IntegrationTest {
                 "|Stiven|*****|13|\r\n" +
                 "|Eva|+++++|14|\r\n" +
                 "-----------------\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", getData());
+    }
+
+    @Test
+    public void testClearWithError() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("clear|users|something");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //clear|users|something
+                "Неудача по причине:Формат комманды 'clear|tableName', а ты ввел: clear|users|something\r\n" +
+                "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", getData());
+    }
+
+    @Test
+    public void testCreateWithError() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|users|something");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //create|users|something
+                "Неудача по причине:Должно быть четное количество параметров в формате 'create|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: 'create|users|something'\r\n" +
+                "Повтори попытку.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());
