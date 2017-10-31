@@ -2,9 +2,7 @@ package ua.com.juja.sqlcmd.model;
 
 import java.util.Arrays;
 
-/**
- * Created by denis on 17.10.2017.
- */
+
 public class DataSet {
 
     static class Data {

@@ -1,8 +1,6 @@
 package ua.com.juja.sqlcmd.model;
 
-/**
- * Created by denis on 18.10.2017.
- */
+
 public interface DatabaseManager {
     DataSet[] getTableData(String tableName);
 

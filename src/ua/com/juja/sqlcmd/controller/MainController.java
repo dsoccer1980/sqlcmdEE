@@ -4,9 +4,7 @@ import ua.com.juja.sqlcmd.controller.command.*;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
-/**
- * Created by denis on 18.10.2017.
- */
+
 public class MainController {
     private final Command[] commands;
     private View view;

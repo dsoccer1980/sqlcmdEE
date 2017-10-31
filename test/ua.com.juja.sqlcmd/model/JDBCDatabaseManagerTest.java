@@ -8,9 +8,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by denis on 16.10.2017.
- */
+
 public class JDBCDatabaseManagerTest {
 
     private DatabaseManager manager;

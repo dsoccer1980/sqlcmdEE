@@ -10,9 +10,7 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 
 
-/**
- * Created by denis on 24.10.2017.
- */
+
 public class IntegrationTest {
 
     private ConfigurableInputStream in;

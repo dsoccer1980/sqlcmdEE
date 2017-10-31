@@ -4,9 +4,7 @@ import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
-/**
- * Created by denis on 23.10.2017.
- */
+
 public class Find implements Command {
     private DatabaseManager manager;
     private View view;

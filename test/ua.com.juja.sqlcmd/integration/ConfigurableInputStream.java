@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-/**
- * Created by denis on 24.10.2017.
- */
+
 public class ConfigurableInputStream extends InputStream{
 
     private String line;
