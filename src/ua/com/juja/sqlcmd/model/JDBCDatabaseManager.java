@@ -19,7 +19,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             int columnSize = rsmd.getColumnCount();
 
             while (rs.next()) {
-                DataSet dataSet = new DataSet();
+                DataSet dataSet = new DataSetImpl();
                 result.add(dataSet);
                 for (int i = 0; i < columnSize; i++) {
                     dataSet.put(rsmd.getColumnName(i+1), rs.getObject(i+1));

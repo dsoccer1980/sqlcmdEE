@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class JDBCDatabaseManagerTest {
         manager.clear(tableName);
 
         //when
-        DataSet input = new DataSet();
+        DataSet input = new DataSetImpl();
         input.put("id", 13);
         input.put("name", "Stiven");
         input.put("password", "pass");
@@ -60,7 +59,7 @@ public class JDBCDatabaseManagerTest {
         String tableName = "users";
         manager.clear(tableName);
 
-        DataSet input = new DataSet();
+        DataSet input = new DataSetImpl();
         input.put("id", 13);
         input.put("name", "Stiven");
         input.put("password", "pass");
@@ -68,7 +67,7 @@ public class JDBCDatabaseManagerTest {
 
 
         //when
-        DataSet newValue = new DataSet();
+        DataSet newValue = new DataSetImpl();
         newValue.put("password", "pass2");
         manager.update(tableName, 13, newValue);
 
