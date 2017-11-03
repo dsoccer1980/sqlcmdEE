@@ -1,6 +1,9 @@
 package ua.com.juja.sqlcmd.model;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public class DataSetImpl implements DataSet {
@@ -43,10 +46,11 @@ public class DataSetImpl implements DataSet {
     }
 
     @Override
-    public String[] getNames() {
-        String[] result = new String[index];
+    public Set<String> getNames() {
+        Set<String> result = new LinkedHashSet<>();
+
         for (int i = 0; i < index; i++) {
-            result[i] = data[i].getName();
+            result.add(data[i].getName());
         }
         return result;
     }
@@ -54,7 +58,7 @@ public class DataSetImpl implements DataSet {
     @Override
     public String toString() {
         return "{" +
-                "names:" + Arrays.toString(getNames()) + ", " +
+                "names:" + getNames().toString() + ", " +
                 "values:" + Arrays.toString(getValues()) +
                 "}";
     }

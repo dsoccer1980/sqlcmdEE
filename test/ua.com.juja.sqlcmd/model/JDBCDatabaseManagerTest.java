@@ -47,7 +47,7 @@ public class JDBCDatabaseManagerTest {
         assertEquals(1, users.size());
 
         DataSet user = users.get(0);
-        assertEquals("[name, password, id]", Arrays.toString(user.getNames()));
+        assertEquals("[name, password, id]", user.getNames().toString());
         assertEquals("[Stiven, pass, 13]", Arrays.toString(user.getValues()));
 
 
@@ -76,7 +76,7 @@ public class JDBCDatabaseManagerTest {
         assertEquals(1, users.size());
 
         DataSet user = users.get(0);
-        assertEquals("[name, password, id]", Arrays.toString(user.getNames()));
+        assertEquals("[name, password, id]",user.getNames().toString());
         assertEquals("[Stiven, pass2, 13]", Arrays.toString(user.getValues()));
     }
 
