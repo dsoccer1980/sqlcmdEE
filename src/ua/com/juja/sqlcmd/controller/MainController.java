@@ -35,24 +35,21 @@ public class MainController {
         view.write("Привет юзер!");
         view.write("Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password");
 
-        while (true){
+        while (true) {
             String input = view.read();
-//            if (input == null){
-//                new Exit(view).process(input);
-//            }
 
-            for (Command command: commands){
+            for (Command command : commands) {
                 try {
                     if (command.canProcess(input)) {
                         command.process(input);
                         break;
                     }
                 } catch (Exception e) {
-                    if (e instanceof ExitException){
+                    if (e instanceof ExitException) {
                         return;
                     }
-                        printError(e);
-                        break;
+                    printError(e);
+                    break;
                 }
             }
             view.write("Введи команду или help для помощи:");

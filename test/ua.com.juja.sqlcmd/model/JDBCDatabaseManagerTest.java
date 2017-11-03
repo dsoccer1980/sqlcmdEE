@@ -10,7 +10,6 @@ import static org.junit.Assert.assertTrue;
 
 
 public class JDBCDatabaseManagerTest {
-
     private DatabaseManager manager;
 
     @Before
@@ -84,7 +83,7 @@ public class JDBCDatabaseManagerTest {
         //given
         String tableName = "users";
         manager.clear(tableName);
-        
+
         //when
         String[] columnNames = manager.getTableColumns(tableName);
 

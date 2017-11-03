@@ -6,11 +6,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ExitTest {
-
     private FakeView view = new FakeView();
 
     @Test
-    public void testCanProcessExitString(){
+    public void testCanProcessExitString() {
         //given
         Command command = new Exit(view);
 
@@ -22,7 +21,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testCantProcessExitQweString(){
+    public void testCantProcessExitQweString() {
         //given
         Command command = new Exit(view);
 
@@ -34,7 +33,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testProcessExitCommand_ThrowsExitException(){
+    public void testProcessExitCommand_ThrowsExitException() {
         //given
         Command command = new Exit(view);
 
@@ -42,8 +41,7 @@ public class ExitTest {
         try {
             command.process("exit");
             fail("Expected ExitException");
-        }
-        catch (ExitException e){
+        } catch (ExitException e) {
             //do nothing
         }
 

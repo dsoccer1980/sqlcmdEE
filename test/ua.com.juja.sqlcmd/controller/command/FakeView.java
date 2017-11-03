@@ -4,7 +4,6 @@ import ua.com.juja.sqlcmd.view.View;
 
 
 public class FakeView implements View {
-
     private String messages = "";
 
     @Override

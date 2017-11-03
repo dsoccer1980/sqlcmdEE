@@ -23,7 +23,7 @@ public class Create implements Command {
     @Override
     public void process(String command) {
         String[] data = command.split("\\|");
-        if (data.length % 2 != 0){
+        if (data.length % 2 != 0) {
             throw new IllegalArgumentException(String.format("Должно быть четное количество параметров " +
                     "в формате 'create|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: '%s'", command));
         }
@@ -38,6 +38,6 @@ public class Create implements Command {
         }
 
         manager.create(tableName, dataSet);
-        view.write(String.format("Запись %s в таблице '%s' была успешно создана.",dataSet, tableName));
+        view.write(String.format("Запись %s в таблице '%s' была успешно создана.", dataSet, tableName));
     }
 }

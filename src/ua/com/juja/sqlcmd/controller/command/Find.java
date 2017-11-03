@@ -32,7 +32,7 @@ public class Find implements Command {
     }
 
     private void printTable(DataSet[] tableData) {
-        for (DataSet row: tableData){
+        for (DataSet row : tableData) {
             printRow(row);
         }
         view.write("-----------------");
@@ -56,6 +56,5 @@ public class Find implements Command {
         view.write("-----------------");
         view.write(result);
         view.write("-----------------");
-
     }
 }

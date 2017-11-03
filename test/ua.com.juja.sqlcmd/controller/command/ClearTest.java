@@ -2,8 +2,6 @@ package ua.com.juja.sqlcmd.controller.command;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
@@ -12,7 +10,6 @@ import static org.mockito.Mockito.*;
 
 
 public class ClearTest {
-
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -26,7 +23,6 @@ public class ClearTest {
 
     @Test
     public void testClearTable() {
-
         //when
         command.process("clear|users");
 
@@ -77,6 +73,5 @@ public class ClearTest {
             assertEquals("Формат комманды 'clear|tableName', а ты ввел: clear|table|qwe", e.getMessage());
         }
     }
-
 
 }

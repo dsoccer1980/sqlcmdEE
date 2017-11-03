@@ -1,7 +1,6 @@
 package ua.com.juja.sqlcmd.integration;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import ua.com.juja.sqlcmd.controller.Main;
 
@@ -10,21 +9,18 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 
 
-
 public class IntegrationTest {
-
     private ConfigurableInputStream in;
     private ByteArrayOutputStream out;
 
     @Before
-    public void setup(){
-        out=new ByteArrayOutputStream();
+    public void setup() {
+        out = new ByteArrayOutputStream();
         in = new ConfigurableInputStream();
 
         System.setIn(in);
         System.setOut(new PrintStream(out));
     }
-
 
 
     public String getData() {
@@ -166,27 +162,6 @@ public class IntegrationTest {
                 //exit
                 "До скорой встречи!\r\n", getData());
     }
-
-//    @Test
-//    public void testFindWithErrorAfterConnect() {
-//        //given
-//        in.add("connect|sqlcmd|postgres|postgres");
-//        in.add("find|nonexistst");
-//        in.add("exit");
-//
-//        //when
-//        Main.main(new String[0]);
-//        assertEquals("Привет юзер!\r\n" +
-//                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
-//                //connect
-//                "Успех!\r\n" +
-//                "Введи команду или help для помощи:\r\n" +
-//                //list
-//                "[users, test]\r\n" +
-//                "Введи команду или help для помощи:\r\n" +
-//                //exit
-//                "До скорой встречи!\r\n", getData());
-//    }
 
     @Test
     public void testFindWithoutDataAfterConnect() {
