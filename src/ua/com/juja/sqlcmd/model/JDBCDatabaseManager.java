@@ -2,6 +2,9 @@ package ua.com.juja.sqlcmd.model;
 
 import java.sql.*;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public class JDBCDatabaseManager implements DatabaseManager {
@@ -36,7 +39,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     private int getSize(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rsCount = statement.executeQuery("SELECT COUNT(*) FROM " + tableName);)
+             ResultSet rsCount = statement.executeQuery("SELECT COUNT(*) FROM " + tableName))
         {
             rsCount.next();
             int size = rsCount.getInt(1);
@@ -49,27 +52,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String[] getTableNames() {
+    public Set<String> getTableNames() {
         String sqlSelect = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'";
+        Set<String> tables = new LinkedHashSet<>();
 
         try(Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sqlSelect))
         {
-            String[] tables = new String[100];
-            int index = 0;
             while (rs.next()) {
-                tables[index++] = rs.getString("table_name");
+                tables.add(rs.getString("table_name"));
             }
-            tables = Arrays.copyOf(tables, index, String[].class);
-
-            while (rs.next()) {
-                System.out.println(rs.getString("table_name"));
-            }
-
             return tables;
         } catch (SQLException e) {
             e.printStackTrace();
-            return new String[0];
+            return tables;
         }
     }
 
@@ -121,12 +117,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     private String getValuesFormated(DataSet input, String format) {
-        String values = "";
+        StringBuilder values = new StringBuilder("");
         for (Object value : input.getValues()) {
-            values += String.format(format, value);
+            values.append(String.format(format, value));
         }
-        values = values.substring(0, values.length() - 1);
-        return values;
+
+        return values.substring(0, values.length() - 1);
     }
 
     @Override
@@ -151,23 +147,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String[] getTableColumns(String tableName) {
+    public Set<String> getTableColumns(String tableName) {
         String sqlSelect = "SELECT * FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '" + tableName + "'";
+        Set<String> tables = new LinkedHashSet<>();
 
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery(sqlSelect))
         {
-            String[] tables = new String[100];
-            int index = 0;
             while (rs.next()) {
-                tables[index++] = rs.getString("column_name");
+                tables.add(rs.getString("column_name"));
             }
-            tables = Arrays.copyOf(tables, index, String[].class);
-
             return tables;
         } catch (SQLException e) {
             e.printStackTrace();
-            return new String[0];
+            return tables;
         }
     }
 
@@ -177,11 +170,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     private String getNameFormated(DataSet newValue, String format) {
-        String string = "";
+        StringBuilder string = new StringBuilder("");
         for (String name : newValue.getNames()) {
-            string += String.format(format, name);
+            string.append(String.format(format, name));
         }
-        string = string.substring(0, string.length() - 1);
-        return string;
+        return string.substring(0, string.length() - 1);
     }
 }
