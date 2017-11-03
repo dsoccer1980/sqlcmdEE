@@ -3,6 +3,7 @@ package ua.com.juja.sqlcmd.controller.command;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
+import java.util.List;
 
 import java.util.Set;
 
@@ -29,11 +30,11 @@ public class Find implements Command {
         Set<String> tableColumns = manager.getTableColumns(tableName);
         printHeader(tableColumns);
 
-        DataSet[] tableData = manager.getTableData(tableName);
+        List<DataSet> tableData = manager.getTableData(tableName);
         printTable(tableData);
     }
 
-    private void printTable(DataSet[] tableData) {
+    private void printTable(List<DataSet> tableData) {
         for (DataSet row : tableData) {
             printRow(row);
         }

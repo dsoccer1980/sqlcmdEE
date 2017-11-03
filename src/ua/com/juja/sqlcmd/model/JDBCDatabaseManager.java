@@ -1,10 +1,7 @@
 package ua.com.juja.sqlcmd.model;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 
 public class JDBCDatabaseManager implements DatabaseManager {
@@ -12,28 +9,27 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
 
     @Override
-    public DataSet[] getTableData(String tableName) {
+    public List<DataSet> getTableData(String tableName) {
+        List<DataSet> result = new ArrayList<>();
+
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName))
         {
-            int size = getSize(tableName);
-
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnSize = rsmd.getColumnCount();
-            DataSet[] result = new DataSet[size];
-            int index = 0;
+
             while (rs.next()) {
                 DataSet dataSet = new DataSet();
-                result[index++] = dataSet;
-                for (int i = 1; i <= columnSize; i++) {
-                    dataSet.put(rsmd.getColumnName(i), rs.getObject(i));
+                result.add(dataSet);
+                for (int i = 0; i < columnSize; i++) {
+                    dataSet.put(rsmd.getColumnName(i+1), rs.getObject(i+1));
                 }
 
             }
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
-            return new DataSet[0];
+            return result;
         }
     }
 

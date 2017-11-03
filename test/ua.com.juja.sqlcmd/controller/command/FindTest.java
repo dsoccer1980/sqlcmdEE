@@ -12,8 +12,10 @@ import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 
 import static org.junit.Assert.assertEquals;
@@ -45,7 +47,9 @@ public class FindTest {
         user2.put("id", 13);
         user2.put("name", "Eva");
         user2.put("password", "+++++");
-        DataSet[] data = new DataSet[]{user1, user2};
+        List<DataSet> data = new ArrayList<>();
+        data.add(user1);
+        data.add(user2);
 
         when(manager.getTableData("users")).thenReturn(data);
 
@@ -94,7 +98,7 @@ public class FindTest {
         //given
         setupTableColumns("users","id", "name", "password");
 
-        when(manager.getTableData("users")).thenReturn(new DataSet[0]);
+        when(manager.getTableData("users")).thenReturn(new ArrayList<DataSet>());
 
 
         //when
@@ -117,7 +121,9 @@ public class FindTest {
         user1.put("id", 12);
         DataSet user2 = new DataSet();
         user2.put("id", 13);
-        DataSet[] data = new DataSet[]{user1, user2};
+        List<DataSet> data = new ArrayList<>();
+        data.add(user1);
+        data.add(user2);
 
         when(manager.getTableData("test")).thenReturn(data);
 
