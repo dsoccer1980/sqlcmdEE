@@ -22,7 +22,6 @@ public class IntegrationTest {
         System.setOut(new PrintStream(out));
     }
 
-
     public String getData() {
         try {
             String result = new String(out.toByteArray(), "UTF-8");
@@ -31,7 +30,6 @@ public class IntegrationTest {
             return e.getMessage();
         }
     }
-
 
     @Test
     public void testHelp() {
@@ -48,7 +46,7 @@ public class IntegrationTest {
                 "Существующие комманды:\r\n" +
                 "\tconnect|databaseName|userName|password\r\n" +
                 "\t\t - Подключиться к базе данных, с которой будем работать\r\n" +
-                "\tlist\r\n" +
+                "\ttables\r\n" +
                 "\t\t - Вывод списка всех таблиц базы данных, к которой подключились\r\n" +
                 "\tclear|tableName\r\n" +
                 "\t\t - очистка всей таблицы\r\n" +
@@ -146,7 +144,7 @@ public class IntegrationTest {
     public void testListAfterConnect() {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("list");
+        in.add("tables");
         in.add("exit");
 
         //when
@@ -195,9 +193,9 @@ public class IntegrationTest {
     public void testConnectAfterConnect() {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("list");
+        in.add("tables");
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("list");
+        in.add("tables");
         in.add("exit");
 
         //when

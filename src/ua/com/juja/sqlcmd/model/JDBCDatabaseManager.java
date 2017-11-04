@@ -27,7 +27,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             return result;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.getMessage();
             return result;
         }
     }
@@ -45,7 +45,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             return tables;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.getMessage();
             return tables;
         }
     }
@@ -66,11 +66,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     password);
         } catch (SQLException e) {
             connection = null;
-            throw new RuntimeException(String.format("Cant get connection for model: %s, user: %s, password: %s", database, user, password), e);
+            throw new RuntimeException(String.format("Cant get connection for model: %s, user: %s, password: %s. ", database, user, password), e);
         }
 
     }
-
 
     @Override
     public void clear(String tableName) {

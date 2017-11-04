@@ -31,10 +31,14 @@ public class Find implements Command {
         String tableName = data[1];
 
         Set<String> tableColumns = manager.getTableColumns(tableName);
-        printHeader(tableColumns);
+        if (tableColumns.size() != 0) {
+            printHeader(tableColumns);
 
-        List<DataSet> tableData = manager.getTableData(tableName);
-        printTable(tableData);
+            List<DataSet> tableData = manager.getTableData(tableName);
+            printTable(tableData);
+        } else {
+            throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+        }
     }
 
     private void printTable(List<DataSet> tableData) {

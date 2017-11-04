@@ -148,6 +148,18 @@ public class FindTest {
         }
     }
 
+    @Test
+    public void testErrorWhenTableDoesNotExist() {
+        //when
+        try{
+            command.process("find|badTableName");
+            fail("Expected exception");
+        } catch (IllegalArgumentException e) {
+            //then
+            assertEquals("Таблицы badTableName не существует",e.getMessage());
+        }
+    }
+
     private void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());
