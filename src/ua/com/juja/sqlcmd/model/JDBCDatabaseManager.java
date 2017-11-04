@@ -72,17 +72,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void clear(String tableName) {
+    public void clear(String tableName) throws SQLException{
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM " + tableName);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
     }
 
     @Override
-    public void create(String tableName, DataSet input) {
+    public void create(String tableName, DataSet input) throws SQLException{
         try (Statement statement = connection.createStatement()) {
             String tableNames = getNameFormated(input, "%s,");
             String values = getValuesFormated(input, "'%s',");
@@ -90,10 +88,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             String sql = "INSERT INTO " + tableName + " (" + tableNames + ") VALUES(" + values + ")";
             statement.executeUpdate(sql);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
     }
 
     private String getValuesFormated(DataSet input, String format) {

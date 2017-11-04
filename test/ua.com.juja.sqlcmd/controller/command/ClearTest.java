@@ -5,6 +5,8 @@ import org.junit.Test;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
+import java.sql.SQLException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -22,14 +24,13 @@ public class ClearTest {
     }
 
     @Test
-    public void testClearTable() {
+    public void testClearTable() throws SQLException{
         //when
         command.process("clear|users");
 
         //then
-        verify(manager).clear("users");
-        verify(view).write("Таблица users была успешно очищена.");
-
+            verify(manager).clear("users");
+            verify(view).write("Таблица users была успешно очищена.");
     }
 
     @Test
@@ -55,7 +56,7 @@ public class ClearTest {
         //when
         try {
             command.process("clear");
-            fail();
+            fail("Expected error");
         } catch (IllegalArgumentException e) {
             //then
             assertEquals("Формат комманды 'clear|tableName', а ты ввел: clear", e.getMessage());
@@ -67,10 +68,21 @@ public class ClearTest {
         //when
         try {
             command.process("clear|table|qwe");
-            fail();
+            fail("Expected error");
         } catch (IllegalArgumentException e) {
             //then
             assertEquals("Формат комманды 'clear|tableName', а ты ввел: clear|table|qwe", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testErrorWhenTableDoesNotExist() {
+        //when
+        try {
+            command.process("clear|badTableName");
+        } catch (IllegalArgumentException e) {
+            //then
+            assertEquals("Таблицы badTableName не существует", e.getMessage());
         }
     }
 

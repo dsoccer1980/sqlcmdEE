@@ -3,6 +3,7 @@ package ua.com.juja.sqlcmd.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -29,10 +30,10 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void testGetTableData() {
+    public void testGetTableData() throws SQLException{
         //given
         String tableName = "users";
-        manager.clear(tableName);
+            manager.clear(tableName);
 
         //when
         DataSet input = new DataSetImpl();
@@ -53,7 +54,7 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void testUpdateTableData() {
+    public void testUpdateTableData() throws SQLException{
         //given
         String tableName = "users";
         manager.clear(tableName);
@@ -80,7 +81,7 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void testGetColumnNames() {
+    public void testGetColumnNames() throws SQLException{
         //given
         String tableName = "users";
         manager.clear(tableName);
