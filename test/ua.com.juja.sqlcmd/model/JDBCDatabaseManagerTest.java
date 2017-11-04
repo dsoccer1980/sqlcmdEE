@@ -3,7 +3,6 @@ package ua.com.juja.sqlcmd.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class JDBCDatabaseManagerTest {
 
         DataSet user = users.get(0);
         assertEquals("[name, password, id]", user.getNames().toString());
-        assertEquals("[Stiven, pass, 13]", Arrays.toString(user.getValues()));
+        assertEquals("[Stiven, pass, 13]", user.getValues().toString());
 
 
     }
@@ -77,7 +76,7 @@ public class JDBCDatabaseManagerTest {
 
         DataSet user = users.get(0);
         assertEquals("[name, password, id]",user.getNames().toString());
-        assertEquals("[Stiven, pass2, 13]", Arrays.toString(user.getValues()));
+        assertEquals("[Stiven, pass2, 13]", user.getValues().toString());
     }
 
     @Test
