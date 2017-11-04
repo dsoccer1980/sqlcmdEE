@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import ua.com.juja.sqlcmd.model.DataSet;
@@ -15,9 +14,6 @@ import ua.com.juja.sqlcmd.view.View;
 
 import java.util.*;
 import java.util.List;
-
-
-import static org.junit.Assert.assertEquals;
 
 
 public class FindTest {
@@ -138,6 +134,18 @@ public class FindTest {
                 "|13|, " +
                 "-----------------]");
 
+    }
+
+    @Test
+    public void testErrorWhenBadCommandFormat() {
+        //when
+        try {
+            command.process("find|users|qwe");
+            fail("Expected exception");
+        } catch (IllegalArgumentException e) {
+            //then
+            assertEquals("Формат комманды 'find|tableName', а ты ввел: find|users|qwe",e.getMessage());
+        }
     }
 
     private void shouldPrint(String expected) {

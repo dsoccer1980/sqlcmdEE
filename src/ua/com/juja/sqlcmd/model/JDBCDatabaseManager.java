@@ -7,7 +7,6 @@ import java.util.*;
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
 
-
     @Override
     public List<DataSet> getTableData(String tableName) {
         List<DataSet> result = new ArrayList<>();
@@ -31,20 +30,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             e.printStackTrace();
             return result;
         }
-    }
-
-    private int getSize(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement();
-             ResultSet rsCount = statement.executeQuery("SELECT COUNT(*) FROM " + tableName))
-        {
-            rsCount.next();
-            int size = rsCount.getInt(1);
-            return size;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
     }
 
     @Override
