@@ -3,8 +3,7 @@ package ua.com.juja.sqlcmd.controller.command;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 
 public class Tables implements Command {
@@ -24,7 +23,9 @@ public class Tables implements Command {
     @Override
     public void process(String command) {
         Set<String> tableNames = manager.getTableNames();
-        String message = tableNames.toString();
+        List<String> tableNamesList = new ArrayList<String>(tableNames);  //TODO
+        Collections.sort(tableNamesList);
+        String message = tableNamesList.toString();
         view.write(message);
     }
 }

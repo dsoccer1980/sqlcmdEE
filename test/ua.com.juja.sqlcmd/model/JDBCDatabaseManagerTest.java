@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -24,16 +26,18 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetAllTableNames() {
         Set<String> tableNames = manager.getTableNames();
-        assertEquals("[test, users]", tableNames.toString());
+        List<String> tableNamesList = new ArrayList<String>(tableNames);
+        Collections.sort(tableNamesList);
+        assertEquals("[test, users]", tableNamesList.toString());
 
 
     }
 
     @Test
-    public void testGetTableData() throws SQLException{
+    public void testGetTableData() throws SQLException {
         //given
         String tableName = "users";
-            manager.clear(tableName);
+        manager.clear(tableName);
 
         //when
         DataSet input = new DataSetImpl();
@@ -54,7 +58,7 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void testUpdateTableData() throws SQLException{
+    public void testUpdateTableData() throws SQLException {
         //given
         String tableName = "users";
         manager.clear(tableName);
@@ -76,12 +80,12 @@ public class JDBCDatabaseManagerTest {
         assertEquals(1, users.size());
 
         DataSet user = users.get(0);
-        assertEquals("[name, password, id]",user.getNames().toString());
+        assertEquals("[name, password, id]", user.getNames().toString());
         assertEquals("[Stiven, pass2, 13]", user.getValues().toString());
     }
 
     @Test
-    public void testGetColumnNames() throws SQLException{
+    public void testGetColumnNames() throws SQLException {
         //given
         String tableName = "users";
         manager.clear(tableName);

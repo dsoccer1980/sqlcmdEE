@@ -154,7 +154,7 @@ public class IntegrationTest {
                 //connect
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //list
+                //tables
                 "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
@@ -208,13 +208,13 @@ public class IntegrationTest {
                 //connect
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //list
+                //tables
                 "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //connect
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //list
+                //tables
                 "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
