@@ -25,7 +25,7 @@ public class Help implements Command {
         view.write("\ttables");
         view.write("\t\t - Вывод списка всех таблиц базы данных, к которой подключились");
 
-        view.write("\tclear|tableName"); //TODO переспросить юзер, уверен ли он
+        view.write("\tclear|tableName");
         view.write("\t\t - очистка всей таблицы");
 
         view.write("\tcreate|tableName|column1|value1|column2|value2|...|columnN|valueN");

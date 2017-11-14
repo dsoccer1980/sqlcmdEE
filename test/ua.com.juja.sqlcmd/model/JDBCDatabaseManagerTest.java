@@ -24,7 +24,7 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetAllTableNames() {
         Set<String> tableNames = manager.getTableNames();
-        assertEquals("[users, test]", tableNames.toString());
+        assertEquals("[test, users]", tableNames.toString());
 
 
     }

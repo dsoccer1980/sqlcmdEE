@@ -42,7 +42,7 @@ public class Clear implements Command {
     }
 
     private String getAnswerClearTableOrNot(String tableName) {
-        view.write("Вы уверены, что хотите очистить таблицу: " + tableName + " . yes/no?");
+        view.write("Вы уверены, что хотите очистить таблицу: " + tableName + ". yes/no?");
         String input = view.read();
         while ((!input.equals("yes")) && (!input.equals("no"))) {
             view.write("Нужно ввести yes или no, а введено: " + input);

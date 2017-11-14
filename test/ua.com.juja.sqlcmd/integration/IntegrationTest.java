@@ -155,7 +155,7 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //list
-                "[users, test]\r\n" +
+                "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());
@@ -178,7 +178,7 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //clear|users
-                "Вы уверены, что хотите очистить таблицу: users . yes/no?\r\n" +
+                "Вы уверены, что хотите очистить таблицу: users. yes/no?\r\n" +
                 //yes
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
@@ -186,7 +186,7 @@ public class IntegrationTest {
                 "-----------------\r\n" +
                 "|name|password|id|\r\n" +
                 "-----------------\r\n" +
-                "-----------------\r\n" +  //TODO
+                "-----------------\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());
@@ -209,13 +209,13 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //list
-                "[users, test]\r\n" +
+                "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //connect
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //list
-                "[users, test]\r\n" +
+                "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());
@@ -258,7 +258,7 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //clear|users
-                "Вы уверены, что хотите очистить таблицу: users . yes/no?\r\n" +
+                "Вы уверены, что хотите очистить таблицу: users. yes/no?\r\n" +
                 //yes
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
@@ -297,6 +297,30 @@ public class IntegrationTest {
                 //clear|users|something
                 "Неудача по причине:Формат комманды 'clear|tableName', а ты ввел: clear|users|something\r\n" +
                 "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", getData());
+    }
+
+    @Test
+    public void testClearWithCancel() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("clear|users");
+        in.add("no");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //clear|users
+                "Вы уверены, что хотите очистить таблицу: users. yes/no?\r\n" +
+                //no
+                "Команда по очистке таблице отменена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());

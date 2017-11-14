@@ -33,7 +33,6 @@ public class Find implements Command {
         Set<String> tableColumns = manager.getTableColumns(tableName);
         if (tableColumns.size() != 0) {
             printHeader(tableColumns);
-
             List<DataSet> tableData = manager.getTableData(tableName);
             printTable(tableData);
         } else {
