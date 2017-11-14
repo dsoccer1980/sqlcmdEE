@@ -166,6 +166,7 @@ public class IntegrationTest {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("clear|users");
+        in.add("yes");
         in.add("find|users");
         in.add("exit");
 
@@ -177,6 +178,8 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //clear|users
+                "Вы уверены, что хотите очистить таблицу: users . yes/no?\r\n" +
+                //yes
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //find|users
@@ -241,6 +244,7 @@ public class IntegrationTest {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("clear|users");
+        in.add("yes");
         in.add("create|users|id|13|name|Stiven|password|*****");
         in.add("create|users|id|14|name|Eva|password|+++++");
         in.add("find|users");
@@ -254,6 +258,8 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //clear|users
+                "Вы уверены, что хотите очистить таблицу: users . yes/no?\r\n" +
+                //yes
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //create|users|id|13|name|Stiven|password|*****

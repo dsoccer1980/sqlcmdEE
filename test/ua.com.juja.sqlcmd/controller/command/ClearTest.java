@@ -5,6 +5,10 @@ import org.junit.Test;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
@@ -26,6 +30,7 @@ public class ClearTest {
     @Test
     public void testClearTable() throws SQLException{
         //when
+        when(view.read()).thenReturn("yes");
         command.process("clear|users");
 
         //then
@@ -79,6 +84,7 @@ public class ClearTest {
     public void testErrorWhenTableDoesNotExist() {
         //when
         try {
+            when(view.read()).thenReturn("yes");
             command.process("clear|badTableName");
         } catch (IllegalArgumentException e) {
             //then

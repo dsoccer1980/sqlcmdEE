@@ -29,10 +29,25 @@ public class Clear implements Command {
         }
         String tableName = data[1];
         try {
-            manager.clear(tableName);
-            view.write(String.format("Таблица %s была успешно очищена.", tableName));
+            String input = getAnswerClearTableOrNot(tableName);
+            if (input.equals("yes")) {
+                manager.clear(tableName);
+                view.write(String.format("Таблица %s была успешно очищена.", tableName));
+            } else {
+                view.write("Команда по очистке таблице отменена.");
+            }
         } catch (SQLException e) {
             throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
         }
+    }
+
+    private String getAnswerClearTableOrNot(String tableName) {
+        view.write("Вы уверены, что хотите очистить таблицу: " + tableName + " . yes/no?");
+        String input = view.read();
+        while ((!input.equals("yes")) && (!input.equals("no"))) {
+            view.write("Нужно ввести yes или no, а введено: " + input);
+            input = view.read();
+        }
+        return input;
     }
 }
