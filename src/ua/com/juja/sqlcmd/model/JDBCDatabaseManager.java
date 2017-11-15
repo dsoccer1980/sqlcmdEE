@@ -92,6 +92,18 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
+    @Override
+    public void update(String tableName, List<String> input) throws SQLException{
+        String column1 = input.get(0);
+        String value1 = input.get(1);
+        String column2 = input.get(2);
+        String value2 = input.get(3);
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",tableName,column1,value1,column2,value2);
+            statement.executeUpdate(sql);
+        }
+    }
+
     private String getValuesFormated(DataSet input, String format) {
         StringBuilder values = new StringBuilder("");
         for (Object value : input.getValues()) {
@@ -101,26 +113,26 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return values.substring(0, values.length() - 1);
     }
 
-    @Override
-    public void update(String tableName, int id, DataSet newValue) {
-        String tableNames = getNameFormatted(newValue, "%s = ?,");
-        String sql = "Update " + tableName + " SET " + tableNames + " Where id=?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql))
-        {
-            int index = 1;
-            for (Object value : newValue.getValues()) {
-                ps.setObject(index, value);
-                index++;
-            }
-
-            ps.setInt(index, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @Override  //TODO
+//    public void update(String tableName, int id, DataSet newValue) {
+//        String tableNames = getNameFormatted(newValue, "%s = ?,");
+//        String sql = "Update " + tableName + " SET " + tableNames + " Where id=?";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(sql))
+//        {
+//            int index = 1;
+//            for (Object value : newValue.getValues()) {
+//                ps.setObject(index, value);
+//                index++;
+//            }
+//
+//            ps.setInt(index, id);
+//            ps.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     @Override
     public void drop(String tableName) throws SQLException {
