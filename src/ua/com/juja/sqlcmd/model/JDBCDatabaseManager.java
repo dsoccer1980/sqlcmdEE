@@ -167,4 +167,16 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
         return string.substring(0, string.length() - 1);
     }
+
+    @Override
+    public boolean isTableExists(String tableName) {
+        try {
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, tableName, null);
+            return tables.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -25,4 +25,6 @@ public interface DatabaseManager {
     boolean isConnected();
 
     void drop(String tableName) throws SQLException;
+
+    boolean isTableExists(String tableName);
 }

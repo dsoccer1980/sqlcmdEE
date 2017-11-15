@@ -2,7 +2,6 @@ package ua.com.juja.sqlcmd.controller.command;
 
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
-
 import java.sql.SQLException;
 
 
@@ -29,6 +28,10 @@ public class Drop implements Command {
         }
         String tableName = data[1];
         try {
+            if (!manager.isTableExists(tableName)) {
+                throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+            }
+
             String input = getAnswerDeleteTableOrNot(tableName);
             if (input.equals("yes")) {
                 manager.drop(tableName);
@@ -37,8 +40,7 @@ public class Drop implements Command {
                 view.write("Команда по удалению таблицы отменена.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

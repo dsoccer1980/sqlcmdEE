@@ -5,6 +5,7 @@ import org.junit.Test;
 import ua.com.juja.sqlcmd.controller.Main;
 
 import java.io.*;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,8 +25,7 @@ public class IntegrationTest {
 
     public String getData() {
         try {
-            String result = new String(out.toByteArray(), "UTF-8");
-            return result;
+            return new String(out.toByteArray(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }
@@ -376,10 +376,11 @@ public class IntegrationTest {
 
     @Test
     public void testCreateTable() {
+       String tableName = "test" + new Random().nextInt(1000);
         //given
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("create|test3|name|password|id");
-        in.add("find|test3");
+        in.add("create|" + tableName + "|name|password|id");
+        in.add("find|" + tableName);
         in.add("exit");
 
         //when
@@ -390,7 +391,7 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //create|test3|id|name|password
-                "Таблица test3 была успешно создана.\r\n" +
+                "Таблица " + tableName + " была успешно создана.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //find|test3
                 "-----------------\r\n" +
