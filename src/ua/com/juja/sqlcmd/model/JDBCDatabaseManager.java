@@ -1,5 +1,7 @@
 package ua.com.juja.sqlcmd.model;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.sql.*;
 import java.util.*;
 
@@ -76,13 +78,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM " + tableName);
         }
-
     }
 
     @Override
-    public void create(String tableName, DataSet input) throws SQLException{
+    public void insert(String tableName, DataSet input) throws SQLException{
         try (Statement statement = connection.createStatement()) {
-            String tableNames = getNameFormated(input, "%s,");
+            String tableNames = getNameFormatted(input, "%s,");
             String values = getValuesFormated(input, "'%s',");
 
             String sql = "INSERT INTO " + tableName + " (" + tableNames + ") VALUES(" + values + ")";
@@ -102,7 +103,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void update(String tableName, int id, DataSet newValue) {
-        String tableNames = getNameFormated(newValue, "%s = ?,");
+        String tableNames = getNameFormatted(newValue, "%s = ?,");
         String sql = "Update " + tableName + " SET " + tableNames + " Where id=?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql))
@@ -119,6 +120,21 @@ public class JDBCDatabaseManager implements DatabaseManager {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void drop(String tableName) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DROP TABLE " + tableName);
+        }
+    }
+
+    @Override
+    public void create(String tableName, List<String> columnList) throws SQLException {
+        String columnNamesFormatted =  StringUtils.join(columnList, " text,") + " text";
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(String.format("CREATE TABLE " + tableName + "(%s)",columnNamesFormatted));
+        }
     }
 
     @Override
@@ -144,7 +160,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return connection != null;
     }
 
-    private String getNameFormated(DataSet newValue, String format) {
+    private String getNameFormatted(DataSet newValue, String format) {
         StringBuilder string = new StringBuilder("");
         for (String name : newValue.getNames()) {
             string.append(String.format(format, name));

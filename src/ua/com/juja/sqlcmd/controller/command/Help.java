@@ -28,11 +28,17 @@ public class Help implements Command {
         view.write("\tclear|tableName");
         view.write("\t\t - очистка всей таблицы");
 
-        view.write("\tcreate|tableName|column1|value1|column2|value2|...|columnN|valueN");
+        view.write("\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN");
         view.write("\t\t - создание записи в таблице");
+
+        view.write("\tcreate|tableName|column1|column2|...|columnN");
+        view.write("\t\t - создание таблицы");
 
         view.write("\tfind|tableName");
         view.write("\t\t - Получить содержимое таблицы 'tableName'");
+
+        view.write("\tdrop|tableName");
+        view.write("\t\t - удалить таблицу");
 
         view.write("\thelp");
         view.write("\t\t - Вывод существующих команд на экран");

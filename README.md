@@ -7,7 +7,7 @@
 Реализованы следующие консольные команды:
 •	сonnect        
     •	Команда для подключения к соответствующей БД
-    •	Формат команды: connect | database | username | password
+    •	Формат команды: connect|database|username|password
         •	где: database - имя БД
         •	username -  имя пользователя БД
         •	password - пароль пользователя БД
@@ -16,26 +16,26 @@
         •	Формат: tables (без параметров)
 •	clear
     •	Команда очищает содержимое указанной таблицы
-    •	Формат: clear | tableName
+    •	Формат: clear|tableName
         •	где tableName - имя очищаемой таблицы
 •	drop
     •	Команда удаляет заданную таблицу
-    •	Формат: drop | tableName
+    •	Формат: drop|tableName
         •	где tableName - имя удаляемой таблицы
 •	create
     •	Команда создает новую таблицу с заданными полями
-    •	Формат: create | tableName | column1 | column2 | ... | columnN 
+    •	Формат: create|tableName|column1|column2|...|columnN 
         •	где: tableName - имя таблицы
         •	column1 - имя первого столбца записи 
         •	column2 - имя второго столбца записи 
         •	columnN - имя n-го столбца записи 
 •	find 
     •	Команда для получения содержимого указанной таблицы
-    •	Формат: find | tableName
+    •	Формат: find|tableName
         •	где tableName - имя таблицы
 •	insert
     •	Команда для вставки одной строки в заданную таблицу
-    •	Формат: insert | tableName | column1 | value1 | column2 | value2 | ... | columnN | valueN
+    •	Формат: insert|tableName|column1|value1|column2|value2|...|columnN|valueN
         •	где: tableName - имя таблицы
         •	column1 - имя первого столбца записи 
         •	value1 - значение первого столбца записи 
@@ -45,7 +45,7 @@
         •	valueN - значение n-го столбца записи 
 •	update
     •	Команда обновит запись, установив значение column2 = value2, для которой соблюдается условие column1 = value1 
-    •	Формат: update | tableName | column1 | value1 | column2 | value2
+    •	Формат: update|tableName|column1|value1|column2|value2
         •	где: tableName - имя таблицы
         •	column1 - имя столбца записи которое проверяется
         •	value1 - значение которому должен соответствовать столбец column1 для обновляемой записи
@@ -55,7 +55,7 @@
         •	valueN - значение n-го обновляемого столбца записи 
 •	delete
     •	Команда удаляет одну или несколько записей для которых соблюдается условие column = value
-    •	Формат: delete | tableName | column | value
+    •	Формат: delete|tableName|column|value
         •	где: tableName - имя таблицы
         •	Column - имя столбца записи которое проверяется
         •	value - значение которому должен соответствовать столбец column1 для удаляемой записи

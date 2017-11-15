@@ -50,10 +50,12 @@ public class IntegrationTest {
                 "\t\t - Вывод списка всех таблиц базы данных, к которой подключились\r\n" +
                 "\tclear|tableName\r\n" +
                 "\t\t - очистка всей таблицы\r\n" +
-                "\tcreate|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
+                "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\t - создание записи в таблице\r\n" +
                 "\tfind|tableName\r\n" +
                 "\t\t - Получить содержимое таблицы 'tableName'\r\n" +
+                "\tdrop|tableName\r\n" +
+                "\t\t - удалить таблицу\r\n" +
                 "\thelp\r\n" +
                 "\t\t - Вывод существующих команд на экран\r\n" +
                 "\texit\r\n" +
@@ -245,8 +247,8 @@ public class IntegrationTest {
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("clear|users");
         in.add("yes");
-        in.add("create|users|id|13|name|Stiven|password|*****");
-        in.add("create|users|id|14|name|Eva|password|+++++");
+        in.add("insert|users|id|13|name|Stiven|password|*****");
+        in.add("insert|users|id|14|name|Eva|password|+++++");
         in.add("find|users");
         in.add("exit");
 
@@ -262,10 +264,10 @@ public class IntegrationTest {
                 //yes
                 "Таблица users была успешно очищена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //create|users|id|13|name|Stiven|password|*****
+                //insert|users|id|13|name|Stiven|password|*****
                 "Запись {names:[id, name, password], values:[13, Stiven, *****]} в таблице 'users' была успешно создана.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //create|users|id|14|name|Eva|password|+++++
+                //insert|users|id|14|name|Eva|password|+++++
                 "Запись {names:[id, name, password], values:[14, Eva, +++++]} в таблице 'users' была успешно создана.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //find|users
@@ -327,10 +329,10 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testCreateWithError() {
+    public void testInsertWithError() {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("create|users|something");
+        in.add("insert|users|something");
         in.add("exit");
 
         //when
@@ -340,11 +342,65 @@ public class IntegrationTest {
                 //connect
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
-                //create|users|something
-                "Неудача по причине:Должно быть четное количество параметров в формате 'create|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: 'create|users|something'\r\n" +
+                //insert|users|something
+                "Неудача по причине:Должно быть четное количество параметров в формате 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: 'insert|users|something'\r\n" +
                 "Повтори попытку.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
                 "До скорой встречи!\r\n", getData());
     }
+
+    @Test
+    public void testDropTable() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("drop|test");
+        in.add("yes");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //clear|users
+                "Вы уверены, что хотите удалить таблицу: test. yes/no?\r\n" +
+                //yes
+                "Таблица test была успешно удалена.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", getData());
+    }
+
+    @Test
+    public void testCreateTable() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|test3|name|password|id");
+        in.add("find|test3");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //create|test3|id|name|password
+                "Таблица test3 была успешно создана.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //find|test3
+                "-----------------\r\n" +
+                "|name|password|id|\r\n" +
+                "-----------------\r\n" +
+                "-----------------\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", getData());
+    }
+
+
 }

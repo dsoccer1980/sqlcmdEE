@@ -14,11 +14,15 @@ public interface DatabaseManager {
 
     void clear(String tableName) throws SQLException;
 
-    void create(String tableName, DataSet input) throws SQLException;
+    void insert(String tableName, DataSet input) throws SQLException;
 
     void update(String tableName, int id, DataSet newValue);
+
+    void create(String tableName, List<String> columnList) throws SQLException;
 
     Set<String> getTableColumns(String tableName);
 
     boolean isConnected();
+
+    void drop(String tableName) throws SQLException;
 }

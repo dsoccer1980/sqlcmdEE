@@ -6,6 +6,8 @@ import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Create implements Command {
@@ -26,30 +28,25 @@ public class Create implements Command {
     @Override
     public void process(String command) {
         String[] data = command.split("\\|");
+
         if (data.length < 3) {
-            throw new IllegalArgumentException(String.format("" +
-                    "Формат комманды 'create|tableName|column1|value1|column2|value2|...|columnN|valueN'," +
-                    " а ты прислал: '%s'", command));
-        }
-        if (data.length % 2 != 0) {
-            throw new IllegalArgumentException(String.format("Должно быть четное количество параметров " +
-                    "в формате 'create|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: '%s'", command));
+            throw new IllegalArgumentException(String.format("Формат команды " +
+                    "'create|tableName|column1|column2|...|columnN', а ты прислал: '%s'", command));
         }
 
         String tableName = data[1];
-
-        DataSet dataSet = new DataSetImpl();
-        for (int index = 1; index < data.length / 2; index++) {
-            String columnName = data[index * 2];
-            String value = data[index * 2 + 1];
-            dataSet.put(columnName, value);
+        List<String> columnList = new ArrayList<>();
+        for (int index = 2; index < data.length; index++) {
+            columnList.add(data[index]);
         }
 
         try {
-            manager.create(tableName, dataSet);
-            view.write(String.format("Запись %s в таблице '%s' была успешно создана.", dataSet, tableName));
+                manager.create(tableName, columnList);
+                view.write(String.format("Таблица %s была успешно создана.", tableName));
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            e.printStackTrace();  //TODO проверить существует ли таблица
+            //throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
         }
     }
+
 }

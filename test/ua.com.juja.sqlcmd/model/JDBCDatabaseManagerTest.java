@@ -44,7 +44,7 @@ public class JDBCDatabaseManagerTest {
         input.put("id", 13);
         input.put("name", "Stiven");
         input.put("password", "pass");
-        manager.create(tableName, input);
+        manager.insert(tableName, input);
 
         //then
         List<DataSet> users = manager.getTableData(tableName);
@@ -67,7 +67,7 @@ public class JDBCDatabaseManagerTest {
         input.put("id", 13);
         input.put("name", "Stiven");
         input.put("password", "pass");
-        manager.create(tableName, input);
+        manager.insert(tableName, input);
 
 
         //when
