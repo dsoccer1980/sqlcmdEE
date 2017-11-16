@@ -41,11 +41,14 @@ public class Create implements Command {
         }
 
         try {
-                manager.create(tableName, columnList);
-                view.write(String.format("Таблица %s была успешно создана.", tableName));
+            if (manager.isTableExists(tableName)) {
+                throw new IllegalArgumentException(String.format("Таблица %s уже существует", tableName));
+            }
+
+            manager.create(tableName, columnList);
+            view.write(String.format("Таблица %s была успешно создана.", tableName));
         } catch (SQLException e) {
-            e.printStackTrace();  //TODO проверить существует ли таблица
-            //throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

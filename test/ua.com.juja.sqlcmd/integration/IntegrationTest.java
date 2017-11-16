@@ -45,21 +45,27 @@ public class IntegrationTest {
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 "Существующие комманды:\r\n" +
                 "\tconnect|databaseName|userName|password\r\n" +
-                "\t\t - Подключиться к базе данных, с которой будем работать\r\n" +
+                "\t\t - подключиться к базе данных, с которой будем работать\r\n" +
                 "\ttables\r\n" +
-                "\t\t - Вывод списка всех таблиц базы данных, к которой подключились\r\n" +
+                "\t\t - вывод списка всех таблиц базы данных, к которой подключились\r\n" +
                 "\tclear|tableName\r\n" +
                 "\t\t - очистка всей таблицы\r\n" +
                 "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\t - создание записи в таблице\r\n" +
+                "\tcreate|tableName|column1|column2|...|columnN\r\n" +
+                "\t\t - создание таблицы\r\n" +
+                "\tupdate|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
+                "\t\t - обновить запись, установив значение column2 = value2,..,columnN = valueN, для которой соблюдается условие column1 = value1\r\n" +
                 "\tfind|tableName\r\n" +
-                "\t\t - Получить содержимое таблицы 'tableName'\r\n" +
+                "\t\t - получить содержимое таблицы 'tableName'\r\n" +
                 "\tdrop|tableName\r\n" +
                 "\t\t - удалить таблицу\r\n" +
+                "\tdelete|tableName|column|value\r\n" +
+                "\t\t - удалить запись в таблице\r\n" +
                 "\thelp\r\n" +
-                "\t\t - Вывод существующих команд на экран\r\n" +
+                "\t\t - вывод существующих команд на экран\r\n" +
                 "\texit\r\n" +
-                "\t\t - Выход из программы\r\n" +
+                "\t\t - выход из программы\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 "До скорой встречи!\r\n", getData());
     }
@@ -145,12 +151,27 @@ public class IntegrationTest {
     @Test
     public void testListAfterConnect() {
         //given
+        String tableName1 = "test";
+        String tableName2 = "test";
         in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|" + tableName1 + "|name");
+        in.add("create|" + tableName2 + "|name");
         in.add("tables");
         in.add("exit");
 
         //when
         Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName1 + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName1 + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName2 + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName2 + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 //connect
@@ -160,20 +181,29 @@ public class IntegrationTest {
                 "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
-                "До скорой встречи!\r\n", getData());
+                "До скорой встречи!\r\n", data);
     }
 
     @Test
     public void testFindWithoutDataAfterConnect() {
+
         //given
+        String tableName1 = "users";
         in.add("connect|sqlcmd|postgres|postgres");
-        in.add("clear|users");
+        in.add("create|" + tableName1 + "|name|password|id");
+        in.add("clear|" + tableName1);
         in.add("yes");
-        in.add("find|users");
+        in.add("find|" + tableName1);
         in.add("exit");
 
         //when
         Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName1 + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName1 + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 //connect
@@ -191,13 +221,17 @@ public class IntegrationTest {
                 "-----------------\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
-                "До скорой встречи!\r\n", getData());
+                "До скорой встречи!\r\n", data);
     }
 
     @Test
     public void testConnectAfterConnect() {
         //given
+        String tableName1 = "test";
+        String tableName2 = "users";
         in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|" + tableName1 + "|name");
+        in.add("create|" + tableName2 + "|name");
         in.add("tables");
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("tables");
@@ -205,6 +239,17 @@ public class IntegrationTest {
 
         //when
         Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName1 + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName1 + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName2 + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName2 + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 //connect
@@ -220,7 +265,7 @@ public class IntegrationTest {
                 "[test, users]\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
-                "До скорой встречи!\r\n", getData());
+                "До скорой встречи!\r\n", data);
     }
 
     @Test
@@ -354,12 +399,19 @@ public class IntegrationTest {
     public void testDropTable() {
         //given
         in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|test|id");
         in.add("drop|test");
         in.add("yes");
         in.add("exit");
 
         //when
         Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                                "Таблица test была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                               "Неудача по причине:Таблица test уже существует\r\n" +
+                                "Повтори попытку.\r\n","");
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 //connect
@@ -371,20 +423,32 @@ public class IntegrationTest {
                 "Таблица test была успешно удалена.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
-                "До скорой встречи!\r\n", getData());
+                "До скорой встречи!\r\n", data);
     }
 
     @Test
     public void testCreateTable() {
-       String tableName = "test" + new Random().nextInt(1000);
+       String tableName = "test";
         //given
         in.add("connect|sqlcmd|postgres|postgres");
+        in.add("drop|" + tableName);
+        in.add("yes");
         in.add("create|" + tableName + "|name|password|id");
         in.add("find|" + tableName);
         in.add("exit");
 
         //when
         Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                               "Неудача по причине:Таблицы test не существует\r\n" +
+                                "Повтори попытку.\r\n" +
+                                "Введи команду или help для помощи:\r\n" +
+                                 "Несуществующая команда:yes\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                                "Вы уверены, что хотите удалить таблицу: test. yes/no\\?\r\n" +
+                                "Таблица test была успешно удалена.\r\n","");
+
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
                 //connect
@@ -400,7 +464,7 @@ public class IntegrationTest {
                 "-----------------\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit
-                "До скорой встречи!\r\n", getData());
+                "До скорой встречи!\r\n", data);
     }
 
 

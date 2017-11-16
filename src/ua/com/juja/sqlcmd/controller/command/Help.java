@@ -20,10 +20,10 @@ public class Help implements Command {
         view.write("Существующие комманды:");
 
         view.write("\tconnect|databaseName|userName|password");
-        view.write("\t\t - Подключиться к базе данных, с которой будем работать");
+        view.write("\t\t - подключиться к базе данных, с которой будем работать");
 
         view.write("\ttables");
-        view.write("\t\t - Вывод списка всех таблиц базы данных, к которой подключились");
+        view.write("\t\t - вывод списка всех таблиц базы данных, к которой подключились");
 
         view.write("\tclear|tableName");
         view.write("\t\t - очистка всей таблицы");
@@ -34,16 +34,22 @@ public class Help implements Command {
         view.write("\tcreate|tableName|column1|column2|...|columnN");
         view.write("\t\t - создание таблицы");
 
+        view.write("\tupdate|tableName|column1|value1|column2|value2|...|columnN|valueN");
+        view.write("\t\t - обновить запись, установив значение column2 = value2,..,columnN = valueN, для которой соблюдается условие column1 = value1");
+
         view.write("\tfind|tableName");
-        view.write("\t\t - Получить содержимое таблицы 'tableName'");
+        view.write("\t\t - получить содержимое таблицы 'tableName'");
 
         view.write("\tdrop|tableName");
         view.write("\t\t - удалить таблицу");
 
+        view.write("\tdelete|tableName|column|value");
+        view.write("\t\t - удалить запись в таблице");
+
         view.write("\thelp");
-        view.write("\t\t - Вывод существующих команд на экран");
+        view.write("\t\t - вывод существующих команд на экран");
 
         view.write("\texit");
-        view.write("\t\t - Выход из программы");
+        view.write("\t\t - выход из программы");
     }
 }

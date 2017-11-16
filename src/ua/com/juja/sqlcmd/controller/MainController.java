@@ -20,6 +20,7 @@ public class MainController {
                 new Clear(manager, view),
                 new Insert(manager, view),
                 new Update(manager, view),
+                new Delete(manager, view),
                 new Create(manager, view),
                 new Find(manager, view),
                 new Drop(manager, view),

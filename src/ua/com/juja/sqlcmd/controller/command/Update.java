@@ -1,11 +1,11 @@
 package ua.com.juja.sqlcmd.controller.command;
 
+import ua.com.juja.sqlcmd.model.DataSet;
+import ua.com.juja.sqlcmd.model.DataSetImpl;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
-
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+
 
 
 public class Update implements Command {
@@ -26,26 +26,37 @@ public class Update implements Command {
     @Override
     public void process(String command) {
         String[] data = command.split("\\|");
-        if (data.length != 6) {
+        if (data.length < 5) {
             throw new IllegalArgumentException(String.format("" +
-                    "Формат комманды 'update|tableName|column1|value1|column2|value2'," +
+                    "Формат комманды 'update|tableName|column1|value1|column2|value2|...|columnN|valueN'," +
                     " а ты прислал: '%s'", command));
+        }
+        if (data.length % 2 != 0) {
+            throw new IllegalArgumentException(String.format("Должно быть четное количество параметров " +
+                    "в формате 'update|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: '%s'", command));
         }
 
         String tableName = data[1];
-        List<String> columnsAndValues = new LinkedList<>();
-        columnsAndValues.add(data[2]);
-        columnsAndValues.add(data[3]);
-        columnsAndValues.add(data[4]);
-        columnsAndValues.add(data[5]);
+        DataSet conditionSet = new DataSetImpl();
+        String columnName = data[2];
+        String value = data[3];
+        conditionSet.put(columnName, value);
+
+        DataSet dataSet = new DataSetImpl();
+
+        for (int index = 2; index < data.length / 2; index++) {
+            columnName = data[index * 2];
+            value = data[index * 2 + 1];
+            dataSet.put(columnName, value);
+        }
 
         try {
             if (!manager.isTableExists(tableName)) {
                 throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
             }
 
-            manager.update(tableName, columnsAndValues);
-            view.write(String.format("Запись %s в таблице '%s' была успешно обновлена.", columnsAndValues, tableName));
+            manager.update(tableName, dataSet, conditionSet);
+            view.write(String.format("Запись %s в таблице '%s' была успешно обновлена.", dataSet, tableName));
         } catch (SQLException e) {
             throw new IllegalArgumentException(e.getMessage());
         }

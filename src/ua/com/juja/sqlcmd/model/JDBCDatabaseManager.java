@@ -93,14 +93,23 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(String tableName, List<String> input) throws SQLException{
-        String column1 = input.get(0);
-        String value1 = input.get(1);
-        String column2 = input.get(2);
-        String value2 = input.get(3);
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",tableName,column1,value1,column2,value2);
-            statement.executeUpdate(sql);
+    public void update(String tableName, DataSet input, DataSet condition) throws SQLException{
+        String tableNames = getNameFormatted(input, "%s = ?,");
+        String conditionNames = getNameFormatted(condition, "%s = ?,");
+
+        String sql = "Update " + tableName + " SET " + tableNames + " Where " + conditionNames;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int index = 1;
+            for (Object value : input.getValues()) {
+                ps.setObject(index, value);
+                index++;
+            }
+            for (Object value : condition.getValues()) {
+                ps.setObject(index, value);
+                index++;
+            }
+            ps.executeUpdate();
         }
     }
 
@@ -146,6 +155,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String columnNamesFormatted =  StringUtils.join(columnList, " text,") + " text";
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(String.format("CREATE TABLE " + tableName + "(%s)",columnNamesFormatted));
+        }
+    }
+
+    @Override
+    public void delete(String tableName, List<String> columnAndValue) throws SQLException {
+        String column = columnAndValue.get(0);
+        String value = columnAndValue.get(1);
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(String.format("DELETE FROM %s WHERE %s='%s'", tableName, column, value));
         }
     }
 
