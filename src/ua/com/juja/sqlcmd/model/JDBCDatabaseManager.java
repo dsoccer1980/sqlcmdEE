@@ -1,7 +1,5 @@
 package ua.com.juja.sqlcmd.model;
 
-import com.sun.deploy.util.StringUtils;
-
 import java.sql.*;
 import java.util.*;
 
@@ -85,32 +83,35 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             String tableNames = getNameFormatted(input, "%s,");
             String values = getValuesFormated(input, "'%s',");
-
             String sql = "INSERT INTO " + tableName + " (" + tableNames + ") VALUES(" + values + ")";
-            statement.executeUpdate(sql);
 
+            statement.executeUpdate(sql);
         }
     }
 
     @Override
     public void update(String tableName, DataSet input, DataSet condition) throws SQLException{
-        String tableNames = getNameFormatted(input, "%s = ?,");
-        String conditionNames = getNameFormatted(condition, "%s = ?,");
-
+        StringBuilder tableNames = getFormattedStringForSQLQuery(input);
+        StringBuilder conditionNames = getFormattedStringForSQLQuery(condition);
         String sql = "Update " + tableName + " SET " + tableNames + " Where " + conditionNames;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            int index = 1;
-            for (Object value : input.getValues()) {
-                ps.setObject(index, value);
-                index++;
-            }
-            for (Object value : condition.getValues()) {
-                ps.setObject(index, value);
-                index++;
-            }
-            ps.executeUpdate();
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
         }
+    }
+
+    private StringBuilder getFormattedStringForSQLQuery(DataSet input) {
+        StringBuilder tableNames = new StringBuilder();
+        for (String str : input.getNames()){
+            if (str.equals("id")){
+                tableNames.append(String.format("%s = %d,",str,Integer.parseInt(input.get(str).toString())));
+            }
+            else {
+                tableNames.append(String.format("%s = '%s',",str,input.get(str)));
+            }
+        }
+        tableNames.deleteCharAt(tableNames.length()-1);
+        return tableNames;
     }
 
     private String getValuesFormated(DataSet input, String format) {
@@ -118,7 +119,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
         for (Object value : input.getValues()) {
             values.append(String.format(format, value));
         }
-
         return values.substring(0, values.length() - 1);
     }
 
@@ -131,7 +131,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void create(String tableName, List<String> columnList) throws SQLException {
-        String columnNamesFormatted =  StringUtils.join(columnList, " text,") + " text";
+        StringBuilder columnNamesFormatted = new StringBuilder();
+        for (String columnName: columnList){
+            if (columnName.equals("id")){
+                columnNamesFormatted.append("id serial,");
+            }
+            else{
+                columnNamesFormatted.append(columnName).append(" text,");
+            }
+        }
+        columnNamesFormatted.deleteCharAt(columnNamesFormatted.length()-1);
+
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(String.format("CREATE TABLE " + tableName + "(%s)",columnNamesFormatted));
         }

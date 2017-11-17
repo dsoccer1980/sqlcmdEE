@@ -37,13 +37,12 @@ public class Update implements Command {
         }
 
         String tableName = data[1];
-        DataSet conditionSet = new DataSetImpl();
         String columnName = data[2];
         String value = data[3];
+        DataSet conditionSet = new DataSetImpl();
         conditionSet.put(columnName, value);
 
         DataSet dataSet = new DataSetImpl();
-
         for (int index = 2; index < data.length / 2; index++) {
             columnName = data[index * 2];
             value = data[index * 2 + 1];

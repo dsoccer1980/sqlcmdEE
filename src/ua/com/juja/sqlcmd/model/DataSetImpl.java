@@ -23,6 +23,11 @@ public class DataSetImpl implements DataSet {
     }
 
     @Override
+    public Object get(String key){
+        return data.get(key);
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "names:" + getNames().toString() + ", " +
