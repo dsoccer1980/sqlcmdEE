@@ -186,7 +186,6 @@ public class IntegrationTest {
 
     @Test
     public void testFindWithoutDataAfterConnect() {
-
         //given
         String tableName1 = "users";
         in.add("connect|sqlcmd|postgres|postgres");
@@ -427,6 +426,53 @@ public class IntegrationTest {
     }
 
     @Test
+    public void testDropTableWithWrongParameters() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("drop|test|smth");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //drop
+                "Неудача по причине:Формат комманды 'drop|tableName', а ты ввел: drop|test|smth\r\n" +
+                "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", data);
+    }
+
+    @Test
+    public void testDropTableWithCancel() {
+        //given
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("drop|test");
+        in.add("no");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //drop
+                "Вы уверены, что хотите удалить таблицу: test. yes/no?\r\n" +
+                "Команда по удалению таблицы отменена.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", data);
+    }
+
+    @Test
     public void testCreateTable() {
        String tableName = "test";
         //given
@@ -467,5 +513,127 @@ public class IntegrationTest {
                 "До скорой встречи!\r\n", data);
     }
 
+    @Test
+    public void testUpdateTable() {
+        //given
+        String tableName = "users";
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|" + tableName + "|name|password|id");
+        in.add("clear|" + tableName);
+        in.add("yes");
+        in.add("insert|" + tableName + "|name|Stiven|password|*****|id|13");
+        in.add("update|" + tableName +"|id|13|name|StivenNew|password|passwordNew");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
+        assertEquals(String.format("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //clear
+                "Вы уверены, что хотите очистить таблицу: %s. yes/no?\r\n" +
+                "Таблица %s была успешно очищена.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //insert
+                "Запись {names:[name, password, id], values:[Stiven, *****, 13]} в таблице '%s' была успешно создана.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //update
+                "Запись {names:[name, password], values:[StivenNew, passwordNew]} в таблице 'users1' была успешно обновлена.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n",tableName,tableName,tableName), data);
+    }
+
+    @Test
+    public void testUpdateTableWithCountParametersLess5() {
+        //given
+        String tableName = "users";
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|" + tableName + "|name|password|id");
+        in.add("update|" + tableName +"|name");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //update
+                "Неудача по причине:Формат комманды 'update|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: 'update|users|name'\r\n" +
+                "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", data);
+    }
+
+    @Test
+    public void testUpdateTableWithOddCountParameters() {
+        //given
+        String tableName = "users";
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("create|" + tableName + "|name|password|id");
+        in.add("update|" + tableName +"|name|Somename|password");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Таблица " + tableName + " была успешно создана.\r\n","");
+        data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
+                "Неудача по причине:Таблица " + tableName + " уже существует\r\n" +
+                "Повтори попытку.\r\n","");
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //update
+                "Неудача по причине:Должно быть четное количество параметров в формате 'update|tableName|column1|value1|column2|value2|...|columnN|valueN', а ты прислал: 'update|users|name|Somename|password'\r\n" +
+                "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", data);
+    }
+
+    @Test
+    public void testUpdateTableAlreadyExists() {
+        //given
+        String tableName = "usersNotExists";
+        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("update|" + tableName +"|id|13|name|Somename");
+        in.add("exit");
+
+        //when
+        Main.main(new String[0]);
+        String data = getData();
+        assertEquals("Привет юзер!\r\n" +
+                "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
+                //connect
+                "Успех!\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //update
+                "Неудача по причине:Таблицы usersNotExists не существует\r\n" +
+                "Повтори попытку.\r\n" +
+                "Введи команду или help для помощи:\r\n" +
+                //exit
+                "До скорой встречи!\r\n", data);
+    }
 
 }
