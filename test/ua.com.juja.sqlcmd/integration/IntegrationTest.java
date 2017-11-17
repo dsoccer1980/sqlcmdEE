@@ -152,10 +152,10 @@ public class IntegrationTest {
     public void testListAfterConnect() {
         //given
         String tableName1 = "test";
-        String tableName2 = "test";
+        String tableName2 = "users";
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("create|" + tableName1 + "|name");
-        in.add("create|" + tableName2 + "|name");
+        in.add("create|" + tableName2 + "|name|password|id");
         in.add("tables");
         in.add("exit");
 
@@ -230,7 +230,7 @@ public class IntegrationTest {
         String tableName2 = "users";
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("create|" + tableName1 + "|name");
-        in.add("create|" + tableName2 + "|name");
+        in.add("create|" + tableName2 + "|name|password|id");
         in.add("tables");
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("tables");
@@ -474,8 +474,8 @@ public class IntegrationTest {
 
     @Test
     public void testCreateTable() {
-       String tableName = "test";
         //given
+        String tableName = "users";
         in.add("connect|sqlcmd|postgres|postgres");
         in.add("drop|" + tableName);
         in.add("yes");
@@ -487,13 +487,13 @@ public class IntegrationTest {
         Main.main(new String[0]);
         String data = getData();
         data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
-                               "Неудача по причине:Таблицы test не существует\r\n" +
+                               "Неудача по причине:Таблицы " + tableName + " не существует\r\n" +
                                 "Повтори попытку.\r\n" +
                                 "Введи команду или help для помощи:\r\n" +
                                  "Несуществующая команда:yes\r\n","");
         data = data.replaceFirst("Введи команду или help для помощи:\r\n" +
-                                "Вы уверены, что хотите удалить таблицу: test. yes/no\\?\r\n" +
-                                "Таблица test была успешно удалена.\r\n","");
+                                "Вы уверены, что хотите удалить таблицу: " + tableName + ". yes/no\\?\r\n" +
+                                "Таблица " + tableName + " была успешно удалена.\r\n","");
 
         assertEquals("Привет юзер!\r\n" +
                 "Введи, пожалуйста, имя базы данных, имя пользователя и пароль в формате: connect|database|username|password\r\n" +
