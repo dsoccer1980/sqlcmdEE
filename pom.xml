@@ -42,6 +42,8 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src</directory>
@@ -49,10 +51,6 @@
                 <excludes>
                     <exclude>**/*.java</exclude>
                 </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
             </resource>
         </resources>
         <plugins>
