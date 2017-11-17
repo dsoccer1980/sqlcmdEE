@@ -1,8 +1,12 @@
 package ua.com.juja.sqlcmd.controller.command;
 
+import org.apache.commons.lang3.StringUtils;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.Set;
@@ -11,6 +15,8 @@ import java.util.Set;
 public class Find implements Command {
     private DatabaseManager manager;
     private View view;
+    private final int COLUMN_WIDTH = 10;
+    private final String SEPARATOR_COLUMN = "+--" + new String(new char[COLUMN_WIDTH]).replace("\0", "-") + "--";
 
     public Find(DatabaseManager manager, View view) {
         this.manager = manager;
@@ -32,9 +38,12 @@ public class Find implements Command {
 
         Set<String> tableColumns = manager.getTableColumns(tableName);
         if (tableColumns.size() != 0) {
+            printSeparator(tableColumns.size());
             printHeader(tableColumns);
+            printSeparator(tableColumns.size());
             List<DataSet> tableData = manager.getTableData(tableName);
             printTable(tableData);
+            printSeparator(tableColumns.size());
         } else {
             throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
         }
@@ -44,26 +53,21 @@ public class Find implements Command {
         for (DataSet row : tableData) {
             printRow(row);
         }
-        view.write("-----------------");
     }
 
     private void printRow(DataSet row) {
         List<Object> values = row.getValues();
-        StringBuilder result = new StringBuilder("|");
-        for (Object value : values) {
-            result.append(value).append("|");
-        }
-        view.write(result.toString());
+        String formatTableColumn = new String(new char[values.size()]).replace("\0", "+  %-" + COLUMN_WIDTH + "." + COLUMN_WIDTH +"s  ") + "  +";
+        view.write(String.format(formatTableColumn,values.toArray()));
     }
 
     private void printHeader(Set<String> tableColumns) {
-        StringBuilder result = new StringBuilder("|");
-        for (String name : tableColumns) {
-            result.append(name).append("|");
-        }
-
-        view.write("-----------------");
-        view.write(result.toString());
-        view.write("-----------------");
+        String formatTableColumn = new String(new char[tableColumns.size()]).replace("\0", "+  %-" + COLUMN_WIDTH + "s  ") + "  +";
+        view.write(String.format(formatTableColumn,tableColumns.toArray()));
     }
+
+    private void printSeparator(int countColumn){
+        view.write(new String(new char[countColumn]).replace("\0", SEPARATOR_COLUMN)+ "--+");
+    }
+
 }

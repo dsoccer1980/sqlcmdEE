@@ -58,7 +58,6 @@ public class FindTest {
                 "|12|Stiven|*****|, " +
                 "|13|Eva|+++++|, " +
                 "-----------------]");
-
     }
 
     @Test
