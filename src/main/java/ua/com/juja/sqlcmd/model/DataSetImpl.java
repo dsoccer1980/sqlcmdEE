@@ -23,7 +23,7 @@ public class DataSetImpl implements DataSet {
     }
 
     @Override
-    public Object get(String key){
+    public Object get(String key) {
         return data.get(key);
     }
 

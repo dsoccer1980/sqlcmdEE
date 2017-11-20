@@ -1,19 +1,21 @@
 package ua.com.juja.sqlcmd.model;
 
+import ua.com.juja.sqlcmd.controller.Configuration;
+
 import java.sql.*;
 import java.util.*;
 
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
+    private Configuration configuration = new Configuration();
 
     @Override
     public List<DataSet> getTableData(String tableName) {
         List<DataSet> result = new ArrayList<>();
 
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName))
-        {
+             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName)) {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnSize = rsmd.getColumnCount();
 
@@ -21,9 +23,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 DataSet dataSet = new DataSetImpl();
                 result.add(dataSet);
                 for (int i = 0; i < columnSize; i++) {
-                    dataSet.put(rsmd.getColumnName(i+1), rs.getObject(i+1));
+                    dataSet.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
                 }
-
             }
             return result;
         } catch (SQLException e) {
@@ -37,9 +38,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String sqlSelect = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'";
         Set<String> tables = new LinkedHashSet<>();
 
-        try(Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(sqlSelect))
-        {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sqlSelect)) {
             while (rs.next()) {
                 tables.add(rs.getString("table_name"));
             }
@@ -58,12 +58,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
             throw new RuntimeException("Please add jdbc jar to project", e);
         }
         try {
-            if (connection!=null){
+            if (connection != null) {
                 connection.close();
             }
             connection = DriverManager.getConnection(
-                    "jdbc:postgresql://127.0.0.1:5432/" + database + "?loggerLevel=OFF", user,
-                    password);
+                    String.format("%s://%s:%s/%s",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
+                    user,password);
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format("Cant get connection for model: %s, user: %s, password: %s. ", database, user, password), e);
@@ -72,14 +72,14 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void clear(String tableName) throws SQLException{
+    public void clear(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM " + tableName);
         }
     }
 
     @Override
-    public void insert(String tableName, DataSet input) throws SQLException{
+    public void insert(String tableName, DataSet input) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             String tableNames = getNameFormatted(input, "%s,");
             String values = getValuesFormated(input, "'%s',");
@@ -90,7 +90,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(String tableName, DataSet input, DataSet condition) throws SQLException{
+    public void update(String tableName, DataSet input, DataSet condition) throws SQLException {
         StringBuilder tableNames = getFormattedStringForSQLQuery(input);
         StringBuilder conditionNames = getFormattedStringForSQLQuery(condition);
         String sql = "Update " + tableName + " SET " + tableNames + " Where " + conditionNames;
@@ -102,15 +102,14 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     private StringBuilder getFormattedStringForSQLQuery(DataSet input) {
         StringBuilder tableNames = new StringBuilder();
-        for (String str : input.getNames()){
-            if (str.equals("id")){
-                tableNames.append(String.format("%s = %d,",str,Integer.parseInt(input.get(str).toString())));
-            }
-            else {
-                tableNames.append(String.format("%s = '%s',",str,input.get(str)));
+        for (String str : input.getNames()) {
+            if (str.equals("id")) {
+                tableNames.append(String.format("%s = %d,", str, Integer.parseInt(input.get(str).toString())));
+            } else {
+                tableNames.append(String.format("%s = '%s',", str, input.get(str)));
             }
         }
-        tableNames.deleteCharAt(tableNames.length()-1);
+        tableNames.deleteCharAt(tableNames.length() - 1);
         return tableNames;
     }
 
@@ -132,18 +131,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void create(String tableName, List<String> columnList) throws SQLException {
         StringBuilder columnNamesFormatted = new StringBuilder();
-        for (String columnName: columnList){
-            if (columnName.equals("id")){
+        for (String columnName : columnList) {
+            if (columnName.equals("id")) {
                 columnNamesFormatted.append("id serial,");
-            }
-            else{
+            } else {
                 columnNamesFormatted.append(columnName).append(" text,");
             }
         }
-        columnNamesFormatted.deleteCharAt(columnNamesFormatted.length()-1);
+        columnNamesFormatted.deleteCharAt(columnNamesFormatted.length() - 1);
 
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.format("CREATE TABLE " + tableName + "(%s)",columnNamesFormatted));
+            statement.executeUpdate(String.format("CREATE TABLE " + tableName + "(%s)", columnNamesFormatted));
         }
     }
 
@@ -162,8 +160,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         Set<String> tables = new LinkedHashSet<>();
 
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sqlSelect))
-        {
+             ResultSet rs = statement.executeQuery(sqlSelect)) {
             while (rs.next()) {
                 tables.add(rs.getString("column_name"));
             }

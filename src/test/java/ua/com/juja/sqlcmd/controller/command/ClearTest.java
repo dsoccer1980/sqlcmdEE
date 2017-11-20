@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -31,8 +32,8 @@ public class ClearTest {
     public void testClearTable() throws SQLException{
         //when
         when(view.read()).thenReturn("yes");
+        when(manager.isTableExists("users")).thenReturn(true);
         command.process("clear|users");
-
         //then
             verify(manager).clear("users");
             verify(view).write("Таблица users была успешно очищена.");

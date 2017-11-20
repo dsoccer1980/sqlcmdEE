@@ -6,8 +6,5 @@ public interface Command {
 
     void process(String command);
 
-    //TODO
-//    String format();
-//    String description();
 }
 

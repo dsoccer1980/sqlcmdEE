@@ -29,6 +29,10 @@ public class Clear implements Command {
         }
         String tableName = data[1];
         try {
+            if (!manager.isTableExists(tableName)) {
+                throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+            }
+
             String input = getAnswerClearTableOrNot(tableName);
             if (input.equals("yes")) {
                 manager.clear(tableName);
@@ -37,7 +41,7 @@ public class Clear implements Command {
                 view.write("Команда по очистке таблице отменена.");
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

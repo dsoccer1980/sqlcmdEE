@@ -1,14 +1,10 @@
 package ua.com.juja.sqlcmd.controller.command;
 
-import org.apache.commons.lang3.StringUtils;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.view.View;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import java.util.Set;
 
 
@@ -57,17 +53,17 @@ public class Find implements Command {
 
     private void printRow(DataSet row) {
         List<Object> values = row.getValues();
-        String formatTableColumn = new String(new char[values.size()]).replace("\0", "+  %-" + COLUMN_WIDTH + "." + COLUMN_WIDTH +"s  ") + "  +";
-        view.write(String.format(formatTableColumn,values.toArray()));
+        String formatTableColumn = new String(new char[values.size()]).replace("\0", "+  %-" + COLUMN_WIDTH + "." + COLUMN_WIDTH + "s  ") + "  +";
+        view.write(String.format(formatTableColumn, values.toArray()));
     }
 
     private void printHeader(Set<String> tableColumns) {
         String formatTableColumn = new String(new char[tableColumns.size()]).replace("\0", "+  %-" + COLUMN_WIDTH + "s  ") + "  +";
-        view.write(String.format(formatTableColumn,tableColumns.toArray()));
+        view.write(String.format(formatTableColumn, tableColumns.toArray()));
     }
 
-    private void printSeparator(int countColumn){
-        view.write(new String(new char[countColumn]).replace("\0", SEPARATOR_COLUMN)+ "--+");
+    private void printSeparator(int countColumn) {
+        view.write(new String(new char[countColumn]).replace("\0", SEPARATOR_COLUMN) + "--+");
     }
 
 }

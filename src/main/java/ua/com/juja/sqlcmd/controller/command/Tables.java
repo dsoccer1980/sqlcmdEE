@@ -23,7 +23,7 @@ public class Tables implements Command {
     @Override
     public void process(String command) {
         Set<String> tableNames = manager.getTableNames();
-        List<String> tableNamesList = new ArrayList<String>(tableNames);  //TODO
+        List<String> tableNamesList = new ArrayList<String>(tableNames);
         Collections.sort(tableNamesList);
         String message = tableNamesList.toString();
         view.write(message);
