@@ -2,18 +2,18 @@ package ua.com.juja.sqlcmd.integration;
 
 import org.junit.Before;
 import org.junit.Test;
+import ua.com.juja.sqlcmd.controller.Configuration;
 import ua.com.juja.sqlcmd.controller.Main;
 
 import java.io.*;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class IntegrationTest {
     private ConfigurableInputStream in;
     private ByteArrayOutputStream out;
+    private Configuration configuration;
 
     @Before
     public void setup() {
@@ -22,9 +22,11 @@ public class IntegrationTest {
 
         System.setIn(in);
         System.setOut(new PrintStream(out));
+
+        configuration = new Configuration();
     }
 
-    public String getData() {
+    private String getData() {
         try {
             return new String(out.toByteArray(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -131,7 +133,7 @@ public class IntegrationTest {
     @Test
     public void testUnsupportedAfterConnect() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("unsupported");
         in.add("exit");
 
@@ -154,7 +156,7 @@ public class IntegrationTest {
         //given
         String tableName1 = "test";
         String tableName2 = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName1 + "|name");
         in.add("create|" + tableName2 + "|name|password|id");
         in.add("tables");
@@ -189,7 +191,7 @@ public class IntegrationTest {
     public void testFindWithoutDataAfterConnect() {
         //given
         String tableName1 = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName1 + "|name|password|id");
         in.add("clear|" + tableName1);
         in.add("yes");
@@ -229,11 +231,11 @@ public class IntegrationTest {
         //given
         String tableName1 = "test";
         String tableName2 = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName1 + "|name");
         in.add("create|" + tableName2 + "|name|password|id");
         in.add("tables");
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("tables");
         in.add("exit");
 
@@ -289,7 +291,7 @@ public class IntegrationTest {
     @Test
     public void testFindAfterConnectWithData() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("clear|users");
         in.add("yes");
         in.add("insert|users|id|13|name|Stiven|password|*****");
@@ -330,7 +332,7 @@ public class IntegrationTest {
     @Test
     public void testClearWithError() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("clear|users|something");
         in.add("exit");
 
@@ -352,7 +354,7 @@ public class IntegrationTest {
     @Test
     public void testClearWithCancel() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("clear|users");
         in.add("no");
         in.add("exit");
@@ -376,7 +378,7 @@ public class IntegrationTest {
     @Test
     public void testClearWithWrongAnswersToAskingClearTableOrNot() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("clear|users");
         in.add("smth");
         in.add("no");
@@ -404,7 +406,7 @@ public class IntegrationTest {
     public void testClearIfTableNotExists() {
         //given
         String tableName = "usersNotExists";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("clear|" + tableName);
         in.add("exit");
 
@@ -427,7 +429,7 @@ public class IntegrationTest {
     @Test
     public void testInsertWithOddCountParameters() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("insert|users|something");
         in.add("exit");
 
@@ -449,7 +451,7 @@ public class IntegrationTest {
     @Test
     public void testInsertWithCountParametersLess3() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("insert|users");
         in.add("exit");
 
@@ -471,7 +473,7 @@ public class IntegrationTest {
     @Test
     public void testInsertWithSqlException() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("insert|users|name-|13");
         in.add("exit");
 
@@ -495,7 +497,7 @@ public class IntegrationTest {
     @Test
     public void testDropTable() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|test|id");
         in.add("drop|test");
         in.add("yes");
@@ -526,7 +528,7 @@ public class IntegrationTest {
     @Test
     public void testDropTableWithWrongParameters() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("drop|test|smth");
         in.add("exit");
 
@@ -549,7 +551,7 @@ public class IntegrationTest {
     @Test
     public void testDropTableWithCancel() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("drop|test");
         in.add("no");
         in.add("exit");
@@ -574,7 +576,7 @@ public class IntegrationTest {
     public void testDropIfTableNotExists() {
         //given
         String tableName = "usersNotExists";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("drop|" + tableName);
         in.add("exit");
 
@@ -597,7 +599,7 @@ public class IntegrationTest {
     @Test
     public void testDropWithWrongAnswersToAskingClearTableOrNot() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("drop|users");
         in.add("smth");
         in.add("no");
@@ -625,7 +627,7 @@ public class IntegrationTest {
     public void testCreateTable() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("drop|" + tableName);
         in.add("yes");
         in.add("create|" + tableName + "|name|password|id");
@@ -665,7 +667,7 @@ public class IntegrationTest {
     @Test
     public void testCreateWithWrongParameter() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|users");
         in.add("exit");
 
@@ -687,7 +689,7 @@ public class IntegrationTest {
     @Test
     public void testCreateWithSqlException() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|-users|id");
         in.add("exit");
 
@@ -712,7 +714,7 @@ public class IntegrationTest {
     public void testUpdateTable() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName + "|name|password|id");
         in.add("clear|" + tableName);
         in.add("yes");
@@ -751,7 +753,7 @@ public class IntegrationTest {
     public void testUpdateTableWithCountParametersLess5() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName + "|name|password|id");
         in.add("update|" + tableName +"|name");
         in.add("exit");
@@ -781,7 +783,7 @@ public class IntegrationTest {
     public void testUpdateTableWithOddCountParameters() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName + "|name|password|id");
         in.add("update|" + tableName +"|name|Somename|password");
         in.add("exit");
@@ -811,7 +813,7 @@ public class IntegrationTest {
     public void testUpdateTableAlreadyExists() {
         //given
         String tableName = "usersNotExists";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("update|" + tableName +"|id|13|name|Somename");
         in.add("exit");
 
@@ -834,7 +836,7 @@ public class IntegrationTest {
     @Test
     public void testUpdateWithSqlException() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("update|users|name-|13|id|13");
         in.add("exit");
 
@@ -859,7 +861,7 @@ public class IntegrationTest {
     public void testDeleteRow() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName + "|name|password|id");
         in.add("clear|" + tableName);
         in.add("yes");
@@ -905,7 +907,7 @@ public class IntegrationTest {
     public void testDeleteRowWithWrongCountParameters() {
         //given
         String tableName = "users";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("create|" + tableName + "|name|password|id");
         in.add("delete|" + tableName +"|name");
         in.add("exit");
@@ -935,7 +937,7 @@ public class IntegrationTest {
     public void testDeleteIfTableNotExists() {
         //given
         String tableName = "usersNotExists";
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("delete|" + tableName +"|id|13");
         in.add("exit");
 
@@ -958,7 +960,7 @@ public class IntegrationTest {
     @Test
     public void testDeleteWithSqlException() {
         //given
-        in.add("connect|sqlcmd|postgres|postgres");
+        in.add("connect|" + getDatabaseUsernamePassword());
         in.add("delete|users|name-|13");
         in.add("exit");
 
@@ -980,4 +982,7 @@ public class IntegrationTest {
                 "До скорой встречи!\r\n", getData());
     }
 
+    private String getDatabaseUsernamePassword() {
+        return String.format("%s|%s|%s", configuration.getDatabaseName(), configuration.getDatabaseUsername(), configuration.getDatabasePassword());
+    }
 }

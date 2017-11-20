@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Created by denisuser on 20.11.2017.
- */
 public class Configuration {
     private Properties properties;
 
@@ -29,5 +26,17 @@ public class Configuration {
 
     public String getDriver(){
         return properties.getProperty("database.jdbc.driver");
+    }
+
+    public String getDatabaseName(){
+        return properties.getProperty("database.name");
+    }
+
+    public String getDatabaseUsername(){
+        return properties.getProperty("database.username");
+    }
+
+    public String getDatabasePassword(){
+        return properties.getProperty("database.password");
     }
 }
