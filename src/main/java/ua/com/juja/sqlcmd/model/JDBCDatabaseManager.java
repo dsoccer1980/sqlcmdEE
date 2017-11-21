@@ -146,11 +146,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void delete(String tableName, List<String> columnAndValue) throws SQLException {
+    public boolean delete(String tableName, List<String> columnAndValue) throws SQLException {
         String column = columnAndValue.get(0);
         String value = columnAndValue.get(1);
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.format("DELETE FROM %s WHERE %s='%s'", tableName, column, value));
+            return (statement.executeUpdate(String.format("DELETE FROM %s WHERE %s='%s'", tableName, column, value)) !=0);
         }
     }
 
@@ -192,6 +192,28 @@ public class JDBCDatabaseManager implements DatabaseManager {
             return tables.next();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isRowExists(String tableName, List<String> columnAndValue) {
+        List<DataSet> result = new ArrayList<>();
+
+        String column = columnAndValue.get(0);
+        String value ="";
+        if (column.equals("id")){
+            value = "'" + Integer.parseInt(columnAndValue.get(1)) + "'";
+        }
+        else{
+            value = columnAndValue.get(1);
+        }
+        String sql = String.format("SELECT * FROM %s WHERE %s = %s", tableName, column, value);
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+             return rs.isBeforeFirst();
+        } catch (SQLException e) {
+             e.getMessage();
             return false;
         }
     }

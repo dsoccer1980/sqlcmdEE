@@ -958,7 +958,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testDeleteWithSqlException() {
+    public void testDeleteIfRowNotExists() {
         //given
         in.add("connect|" + getDatabaseUsernamePassword());
         in.add("delete|users|name-|13");
@@ -973,9 +973,7 @@ public class IntegrationTest {
                 "Успех!\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //clear|users|something
-                "Неудача по причине:ERROR: operator does not exist: text -= unknown\n" +
-                "  Hint: No operator matches the given name and argument type(s). You might need to add explicit type casts.\n" +
-                "  Position: 29\r\n" +
+                "Неудача по причине:Данной записи в таблице users не существует\r\n" +
                 "Повтори попытку.\r\n" +
                 "Введи команду или help для помощи:\r\n" +
                 //exit

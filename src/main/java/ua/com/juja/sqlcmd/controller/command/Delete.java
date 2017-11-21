@@ -42,7 +42,13 @@ public class Delete implements Command {
                 throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
             }
 
-            manager.delete(tableName, columnAndValue);
+            if (!manager.isRowExists(tableName, columnAndValue)) {
+                throw new IllegalArgumentException(String.format("Данной записи в таблице %s не существует", tableName));
+            }
+
+            if (!manager.delete(tableName, columnAndValue)) {
+                throw new IllegalArgumentException("Запись удалить не удалось.");
+            }
             view.write(String.format("Запись %s в таблице '%s' была успешно удалена.", columnAndValue, tableName));
         } catch (SQLException e) {
             throw new IllegalArgumentException(e.getMessage());
