@@ -62,7 +62,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 connection.close();
             }
             connection = DriverManager.getConnection(
-                    String.format("%s://%s:%s/%s",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
+                    String.format("%s://%s:%s/%s?loggerLevel=OFF",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
                     user,password);
         } catch (SQLException e) {
             connection = null;
