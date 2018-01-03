@@ -28,7 +28,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             return result;
         } catch (SQLException e) {
-            e.getMessage();
             return result;
         }
     }
@@ -45,7 +44,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             return tables;
         } catch (SQLException e) {
-            e.getMessage();
             return tables;
         }
     }
@@ -114,7 +112,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     private String getValuesFormated(DataSet input, String format) {
-        StringBuilder values = new StringBuilder("");
+        StringBuilder values = new StringBuilder();
         for (Object value : input.getValues()) {
             values.append(String.format(format, value));
         }
@@ -166,7 +164,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             return tables;
         } catch (SQLException e) {
-            e.printStackTrace();
             return tables;
         }
     }
@@ -191,7 +188,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             ResultSet tables = dbm.getTables(null, null, tableName, null);
             return tables.next();
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -213,7 +209,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
              ResultSet rs = statement.executeQuery(sql)) {
              return rs.isBeforeFirst();
         } catch (SQLException e) {
-             e.getMessage();
             return false;
         }
     }

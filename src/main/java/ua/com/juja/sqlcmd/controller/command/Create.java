@@ -42,12 +42,12 @@ public class Create implements Command {
             if (manager.isTableExists(tableName)) {
                 throw new IllegalArgumentException(String.format("Таблица %s уже существует", tableName));
             }
-
             manager.create(tableName, columnList);
-            view.write(String.format("Таблица %s была успешно создана.", tableName));
         } catch (SQLException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
+
+        view.write(String.format("Таблица %s была успешно создана.", tableName));
     }
 
 }
