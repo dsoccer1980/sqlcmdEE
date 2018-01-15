@@ -7,8 +7,13 @@
 </head>
 <body>
 
-<c:forEach items="${items}" var="item">
-<a href=${item}>${item}</a><br>
-</c:forEach>
+<form action="connect" method="post">
+
+ Database name<input type="text" name="dbname"> <br>
+ Username <input type="text" name="username"> <br>
+ Password <input type="password" name="password"> <br>
+  <input type="submit" value="connect">
+</form>
+
 
 </body>
