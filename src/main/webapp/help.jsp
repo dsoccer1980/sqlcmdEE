@@ -39,7 +39,7 @@
         help <br>
          - вывод существующих команд на экран <br>
 
-<a href=menu>Menu</a>
+<%@include file="footer.jsp" %>
 
 
 

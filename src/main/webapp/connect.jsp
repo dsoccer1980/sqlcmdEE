@@ -14,6 +14,6 @@
  Password <input type="password" name="password"> <br>
   <input type="submit" value="connect">
 </form>
-
+<%@include file="footer.jsp" %>
 
 </body>

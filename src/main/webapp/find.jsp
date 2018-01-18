@@ -17,7 +17,7 @@
                 </tr>
              </c:forEach>
         </table>
-        <a href=menu>Menu</a>
+ <%@include file="footer.jsp" %>
 
 </body>
 </html>
