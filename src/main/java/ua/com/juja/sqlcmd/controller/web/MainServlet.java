@@ -1,5 +1,6 @@
 package ua.com.juja.sqlcmd.controller.web;
 
+import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.service.Service;
 import ua.com.juja.sqlcmd.service.ServiceImpl;
 
@@ -20,17 +21,41 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
         String action = getAction(req);
+
+        DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("db_manager");
+
+        if (action.startsWith("/connect")) {
+            if (manager == null) {
+                req.getRequestDispatcher("connect.jsp").forward(req, resp);
+                return;
+            }
+            else {
+                resp.sendRedirect(resp.encodeRedirectURL("menu"));
+                return;
+            }
+        }
+
+        if (manager == null) {
+            resp.sendRedirect(resp.encodeRedirectURL("connect"));
+            return;
+        }
 
         if (action.startsWith("/menu") || action.equals("/")) {
             req.setAttribute("items", service.commandsList());
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
+
         } else if (action.startsWith("/help")) {
             req.getRequestDispatcher("help.jsp").forward(req, resp);
+
+        } else if (action.startsWith("/find")) {
+            String tableName = req.getParameter("table");
+            req.setAttribute("table", service.find(manager, tableName));
+            req.getRequestDispatcher("find.jsp").forward(req, resp);
+
         } else if (action.startsWith("/connect")) {
             req.getRequestDispatcher("connect.jsp").forward(req, resp);
+
         } else {
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
@@ -45,7 +70,8 @@ public class MainServlet extends HttpServlet {
             String password = req.getParameter("password");
 
             try {
-                service.connect(databaseName, userName, password);
+                DatabaseManager manager = service.connect(databaseName, userName, password);
+                req.getSession().setAttribute("db_manager", manager);
                 resp.sendRedirect(resp.encodeRedirectURL("menu"));
             } catch (Exception e) {
                 resp.sendRedirect(resp.encodeRedirectURL("error"));
