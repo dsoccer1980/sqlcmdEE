@@ -7,6 +7,15 @@
 
     <display-name>sqlcmd</display-name>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:/application-context.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>MainServlet</servlet-name>
         <servlet-class>ua.com.juja.sqlcmd.controller.web.MainServlet</servlet-class>
@@ -15,5 +24,8 @@
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+
+
 
 </web-app>
