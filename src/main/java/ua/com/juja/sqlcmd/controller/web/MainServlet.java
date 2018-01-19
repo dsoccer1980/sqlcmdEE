@@ -1,9 +1,11 @@
 package ua.com.juja.sqlcmd.controller.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.service.Service;
-import ua.com.juja.sqlcmd.service.ServiceImpl;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
+
+    @Autowired
     private Service service;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-        service = new ServiceImpl();
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+
     }
 
     @Override
@@ -74,7 +79,8 @@ public class MainServlet extends HttpServlet {
                 req.getSession().setAttribute("db_manager", manager);
                 resp.sendRedirect(resp.encodeRedirectURL("menu"));
             } catch (Exception e) {
-                resp.sendRedirect(resp.encodeRedirectURL("error"));
+                e.printStackTrace();
+                req.getRequestDispatcher("error.jsp").forward(req, resp);
             }
         }
     }

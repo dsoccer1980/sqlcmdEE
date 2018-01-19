@@ -1,12 +1,17 @@
 package ua.com.juja.sqlcmd.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
-import ua.com.juja.sqlcmd.model.JDBCDatabaseManager;
 
 import java.util.*;
 
+@Component
 public class ServiceImpl implements Service{
+
+    @Autowired
+    private DataBaseManagerFactory dataBaseManagerFactory;
 
     @Override
     public List<String> commandsList() {
@@ -15,7 +20,7 @@ public class ServiceImpl implements Service{
 
     @Override
     public DatabaseManager connect(String databaseName, String userName, String password) {
-        DatabaseManager manager = new JDBCDatabaseManager();
+        DatabaseManager manager = dataBaseManagerFactory.createDatabaseManager();
         manager.connect(databaseName, userName, password);
         return manager;
     }
