@@ -1,11 +1,12 @@
 package ua.com.juja.sqlcmd.model;
 
+import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.controller.Configuration;
 
 import java.sql.*;
 import java.util.*;
 
-
+@Component
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
     private Configuration configuration = new Configuration();

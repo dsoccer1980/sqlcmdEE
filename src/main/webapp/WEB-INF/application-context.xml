@@ -13,8 +13,11 @@
     <context:component-scan base-package="ua.com.juja.sqlcmd.service" />
     <context:component-scan base-package="ua.com.juja.sqlcmd.model" />
 
-    <bean id="databaseManager" class="ua.com.juja.sqlcmd.model.JDBCDatabaseManager">
-    </bean>
+    <!--<bean id="databaseManager" class="ua.com.juja.sqlcmd.model.JDBCDatabaseManager">-->
+    <!--</bean>-->
 
+    <bean id="service" class="ua.com.juja.sqlcmd.service.ServiceImpl">
+        <lookup-method name="getManager" bean="JDBCDatabaseManager"/>
+    </bean>
 
 </beans>

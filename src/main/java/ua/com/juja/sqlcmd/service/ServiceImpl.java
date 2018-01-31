@@ -8,10 +8,10 @@ import ua.com.juja.sqlcmd.model.DatabaseManager;
 import java.util.*;
 
 @Component
-public class ServiceImpl implements Service{
+public abstract class ServiceImpl implements Service{
 
     @Autowired
-    private DataBaseManagerFactory dataBaseManagerFactory;
+    abstract protected DatabaseManager getManager();
 
     @Override
     public List<String> commandsList() {
@@ -20,7 +20,7 @@ public class ServiceImpl implements Service{
 
     @Override
     public DatabaseManager connect(String databaseName, String userName, String password) {
-        DatabaseManager manager = dataBaseManagerFactory.createDatabaseManager();
+        DatabaseManager manager = getManager();
         manager.connect(databaseName, userName, password);
         return manager;
     }
