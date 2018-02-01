@@ -15,7 +15,7 @@ public abstract class ServiceImpl implements Service{
 
     @Override
     public List<String> commandsList() {
-        return Arrays.asList("help", "menu", "connect", "find");
+        return Arrays.asList("help", "tables");
     }
 
     @Override
@@ -44,4 +44,10 @@ public abstract class ServiceImpl implements Service{
 
         return result;
     }
+
+    @Override
+    public Set<String> tables(DatabaseManager manager) {
+        return manager.getTableNames();
+    }
+
 }

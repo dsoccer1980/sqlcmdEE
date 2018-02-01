@@ -1,15 +1,10 @@
 package ua.com.juja.sqlcmd.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DataSetImpl;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
@@ -38,7 +33,6 @@ public class ServiceImplMockitoTest {
     @Test
     public void test(){
         //given
-        //DatabaseManager manager = service.connect("sqlcmd", "postgres", "postgres");
         DataSet input = new DataSetImpl();
         input.put("id", 13);
         input.put("name", "Vasja");
