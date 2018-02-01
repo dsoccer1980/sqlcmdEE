@@ -1,11 +1,9 @@
 package ua.com.juja.sqlcmd.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,6 +12,7 @@ import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DataSetImpl;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,24 +20,18 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ServiceImplTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath:test-application-context.xml")
+public class ServiceImplSpringJUnitTest {
 
-    @InjectMocks
-    private ServiceImpl service = new ServiceImpl() {
-        @Override
-        protected DatabaseManager getManager() {
-            return manager;
-        }
-    };
+    @Autowired
+    private ServiceImpl service;
 
-    @Mock
-    private DatabaseManager manager;
 
     @Test
     public void test(){
         //given
-        //DatabaseManager manager = service.connect("sqlcmd", "postgres", "postgres");
+        DatabaseManager manager = service.connect("sqlcmd", "postgres", "postgres");
         DataSet input = new DataSetImpl();
         input.put("id", 13);
         input.put("name", "Vasja");
@@ -49,10 +42,12 @@ public class ServiceImplTest {
         input2.put("name", "Eva");
         input2.put("password", "PassPass");
 
-        when(manager.getTableColumns("users"))
-                .thenReturn(new LinkedHashSet<>(Arrays.asList("name", "password", "id")));
-        when(manager.getTableData("users"))
-                .thenReturn(Arrays.asList(input, input2));
+        try {
+            manager.insert("users", input);
+            manager.insert("users", input2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //when
         List<List<String>> users = service.find(manager, "users");
