@@ -8,12 +8,13 @@ public class Configuration {
     private Properties properties;
 
     public Configuration() {
-        try(InputStream is = Main.class.getClassLoader().getResourceAsStream("config/sqlcmd.properties")) {
+        try(InputStream is = this.getClass().getClassLoader().getResourceAsStream("config/sqlcmd.properties")) {
             properties = new Properties();
             properties.load(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public String getServerName(){
