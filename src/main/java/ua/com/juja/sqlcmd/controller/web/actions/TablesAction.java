@@ -17,7 +17,12 @@ public class TablesAction extends AbstractAction {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("tables", getService().tables(getManager(req, resp)));
-        goToJsp(req, resp, "tables.jsp");
+        if (getManager(req, resp) == null) {
+            goToJsp(req, resp, "connect.jsp");
+        }
+        else {
+            req.setAttribute("tables", getService().tables(getManager(req, resp)));
+            goToJsp(req, resp, "tables.jsp");
+        }
     }
 }
