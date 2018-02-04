@@ -9,10 +9,6 @@ import java.io.IOException;
 
 public class MenuAction extends AbstractAction {
 
-    public MenuAction(Service service) {
-        super(service);
-    }
-
     @Override
     public boolean canProcess(String url) {
         return url.startsWith("/menu") || url.equals("/");
@@ -24,7 +20,7 @@ public class MenuAction extends AbstractAction {
             goToJsp(req, resp, "connect.jsp");
         }
         else {
-            req.setAttribute("items", service.commandsList());
+            req.setAttribute("items", getService().commandsList());
             goToJsp(req, resp, "menu.jsp");
         }
     }

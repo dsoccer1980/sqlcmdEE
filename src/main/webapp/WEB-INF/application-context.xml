@@ -12,6 +12,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="ua.com.juja.sqlcmd.service" />
     <context:component-scan base-package="ua.com.juja.sqlcmd.model" />
+    <context:component-scan base-package="ua.com.juja.sqlcmd.controller.web" />
 
     <!--<bean id="databaseManager" class="ua.com.juja.sqlcmd.model.JDBCDatabaseManager">-->
     <!--</bean>-->
@@ -20,4 +21,8 @@
         <lookup-method name="getManager" bean="JDBCDatabaseManager"/>
     </bean>
 
-</beans>
+    <bean id="actionResolver" class="ua.com.juja.sqlcmd.controller.web.ActionResolver">
+      <property name="service" ref="service"></property>
+    </bean>
+
+    </beans>

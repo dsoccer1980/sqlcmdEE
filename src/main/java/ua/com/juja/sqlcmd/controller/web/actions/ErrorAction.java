@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class ErrorAction extends AbstractAction {
 
-    public ErrorAction(Service service) {
-        super(service);
-    }
-
     @Override
     public boolean canProcess(String url) {
         return true;

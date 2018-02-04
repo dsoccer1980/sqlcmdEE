@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class HelpAction extends AbstractAction {
 
-    public HelpAction(Service service) {
-        super(service);
-    }
-
     @Override
     public boolean canProcess(String url) {
         return url.startsWith("/help");

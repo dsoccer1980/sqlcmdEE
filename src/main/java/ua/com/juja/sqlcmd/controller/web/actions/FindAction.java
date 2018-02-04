@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class FindAction extends AbstractAction {
 
-    public FindAction(Service service) {
-        super(service);
-    }
-
     @Override
     public boolean canProcess(String url) {
         return url.startsWith("/find");
@@ -21,8 +17,13 @@ public class FindAction extends AbstractAction {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String tableName = req.getParameter("table");
-        req.setAttribute("table", service.find(getManager(req, resp), tableName));
-        goToJsp(req, resp, "find.jsp");
+        if (getManager(req, resp) == null) {
+            goToJsp(req, resp, "connect.jsp");
+        }
+        else {
+            String tableName = req.getParameter("table");
+            req.setAttribute("table", getService().find(getManager(req, resp), tableName));
+            goToJsp(req, resp, "find.jsp");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package ua.com.juja.sqlcmd.controller.web;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.service.Service;
 
@@ -14,11 +15,7 @@ import java.io.IOException;
 
 public abstract class AbstractAction implements Action {
 
-    public  Service service;
-
-    public AbstractAction(Service service) {
-        this.service = service;
-    }
+    private Service service;
 
     protected void goToJsp(ServletRequest req, ServletResponse resp, String path) throws ServletException, IOException {
             req.getRequestDispatcher(path).forward(req, resp);
@@ -38,4 +35,14 @@ public abstract class AbstractAction implements Action {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //do nothing
     }
+
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+
 }

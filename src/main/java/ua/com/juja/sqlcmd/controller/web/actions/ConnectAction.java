@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class ConnectAction extends AbstractAction {
 
-    public ConnectAction(Service service) {
-        super(service);
-    }
-
     @Override
     public boolean canProcess(String url) {
         return url.startsWith("/connect");
@@ -36,7 +32,7 @@ public class ConnectAction extends AbstractAction {
         String password = req.getParameter("password");
 
         try {
-            DatabaseManager manager = service.connect(databaseName, userName, password);
+            DatabaseManager manager = getService().connect(databaseName, userName, password);
             req.getSession().setAttribute("db_manager", manager);
             resp.sendRedirect(resp.encodeRedirectURL("menu"));
         } catch (Exception e) {
