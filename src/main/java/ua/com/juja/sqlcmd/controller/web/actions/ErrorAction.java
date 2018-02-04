@@ -1,5 +1,6 @@
-package ua.com.juja.sqlcmd.controller.web;
+package ua.com.juja.sqlcmd.controller.web.actions;
 
+import ua.com.juja.sqlcmd.controller.web.AbstractAction;
 import ua.com.juja.sqlcmd.service.Service;
 
 import javax.servlet.ServletException;
