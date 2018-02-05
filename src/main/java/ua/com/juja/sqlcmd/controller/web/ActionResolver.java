@@ -42,6 +42,9 @@ public class ActionResolver {
         actions.add(new HelpAction());
         actions.add(new TablesAction());
         actions.add(new FindAction());
+        actions.add(new ClearAction());
+        actions.add(new CreateAction());
+        actions.add(new DropAction());
         actions.add(new ErrorAction());
     }
 

@@ -6,11 +6,18 @@
     <title>Help</title>
 </head>
 <body>
+${message}
         <table border="1">
             <c:forEach items="${tables}" var="name">
                 <tr>
                         <td>
                            <a href="find?table=${name}">${name}</a>
+                        </td>
+                        <td>
+                            <a href="clear?table=${name}">clear</a>
+                        </td>
+                        <td>
+                            <a href="drop?table=${name}">delete</a>
                         </td>
                 </tr>
              </c:forEach>
