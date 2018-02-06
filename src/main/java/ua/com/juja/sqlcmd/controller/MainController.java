@@ -2,6 +2,8 @@ package ua.com.juja.sqlcmd.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
@@ -17,12 +19,14 @@ public class MainController {
     private Service service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String main(HttpServletRequest request, HttpSession session) {
+    public String main() {
             return "redirect:menu";
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
-    public String connectGet(HttpServletRequest request, HttpSession session) {
+    public String connectGet(HttpSession session, Model model) {
+        model.addAttribute("connection", new Connection());
+
         if (getManager(session) == null) {
             return "connect";
         }
@@ -32,10 +36,11 @@ public class MainController {
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
-    public String connectPost(HttpServletRequest request, HttpSession session) {
-        String databaseName = request.getParameter("dbname");
-        String userName = request.getParameter("username");
-        String password = request.getParameter("password");
+    public String connectPost(@ModelAttribute("connection") Connection connection,
+                              HttpSession session) {
+        String databaseName = connection.getDbName();
+        String userName = connection.getUserName();
+        String password = connection.getPassword();
 
         try {
             DatabaseManager manager = service.connect(databaseName, userName, password);
@@ -52,32 +57,32 @@ public class MainController {
     }
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public String menu(HttpServletRequest request) {
-        request.setAttribute("items", service.commandsList());
+    public String menu(Model model) {
+        model.addAttribute("items", service.commandsList());
         return "/menu";
     }
 
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
-    public String tables(HttpServletRequest request, HttpSession session) {
+    public String tables(HttpSession session, Model model) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
             return "redirect:connect";
         }
         else {
-            request.setAttribute("tables", service.tables(manager));
+            model.addAttribute("tables", service.tables(manager));
             return "tables";
         }
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public String find(HttpServletRequest request, HttpSession session) {
+    public String find(HttpServletRequest request, HttpSession session, Model model) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
             return "redirect:connect";
         }
         else {
             String tableName = request.getParameter("table");
-            request.setAttribute("table", service.find(getManager(session), tableName));
+            model.addAttribute("table", service.find(getManager(session), tableName));
             return "find";
         }
     }
