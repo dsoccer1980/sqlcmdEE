@@ -1,5 +1,8 @@
 package ua.com.juja.sqlcmd.model;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.controller.Configuration;
 
@@ -10,27 +13,26 @@ import java.util.*;
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
     private Configuration configuration = new Configuration();
+    private JdbcTemplate template;
 
     @Override
     public List<DataSet> getTableData(String tableName) {
-        List<DataSet> result = new ArrayList<>();
 
-        try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName)) {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnSize = rsmd.getColumnCount();
 
-            while (rs.next()) {
-                DataSet dataSet = new DataSetImpl();
-                result.add(dataSet);
-                for (int i = 0; i < columnSize; i++) {
-                    dataSet.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
-                }
-            }
-            return result;
-        } catch (SQLException e) {
-            return result;
-        }
+        List<DataSet> result = template.query("SELECT * FROM " + tableName,
+                new RowMapper<DataSet>() {
+                    @Override
+                    public DataSet mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+                        DataSet dataSet = new DataSetImpl();
+                        ResultSetMetaData rsmd = resultSet.getMetaData();
+                        int columnSize = rsmd.getColumnCount();
+                        for (int i = 0; i < columnSize; i++) {
+                            dataSet.put(rsmd.getColumnName(i + 1), resultSet.getObject(i + 1));
+                        }
+                        return dataSet;
+                    }
+                });
+        return result;
     }
 
     @Override
@@ -63,6 +65,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             connection = DriverManager.getConnection(
                     String.format("%s://%s:%s/%s?loggerLevel=OFF",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
                     user,password);
+            template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format("Cant get connection for model: %s, user: %s, password: %s. ", database, user, password), e);
