@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import ua.com.juja.sqlcmd.controller.Configuration;
 
 import java.sql.*;
@@ -17,9 +18,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public List<DataSet> getTableData(String tableName) {
-
-
-        List<DataSet> result = template.query("SELECT * FROM " + tableName,
+        return template.query("SELECT * FROM " + tableName,
                 new RowMapper<DataSet>() {
                     @Override
                     public DataSet mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -32,23 +31,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
                         return dataSet;
                     }
                 });
-        return result;
     }
 
     @Override
     public Set<String> getTableNames() {
-        String sqlSelect = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'";
-        Set<String> tables = new LinkedHashSet<>();
-
-        try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sqlSelect)) {
-            while (rs.next()) {
-                tables.add(rs.getString("table_name"));
-            }
-            return tables;
-        } catch (SQLException e) {
-            return tables;
-        }
+        return new HashSet<>(template.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'",
+                new RowMapper<String>() {
+                    @Override
+                    public String mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+                        return resultSet.getString("table_name");
+                    }
+                }));
     }
 
     @Override
@@ -68,6 +61,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
         } catch (SQLException e) {
             connection = null;
+            template =null;
             throw new RuntimeException(String.format("Cant get connection for model: %s, user: %s, password: %s. ", database, user, password), e);
         }
 
@@ -75,20 +69,14 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void clear(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM " + tableName);
-        }
+        template.execute("DELETE FROM " + tableName);
     }
 
     @Override
     public void insert(String tableName, DataSet input) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String tableNames = getNameFormatted(input, "%s,");
-            String values = getValuesFormated(input, "'%s',");
-            String sql = "INSERT INTO " + tableName + " (" + tableNames + ") VALUES(" + values + ")";
-
-            statement.executeUpdate(sql);
-        }
+        String tableNames = StringUtils.collectionToDelimitedString(input.getNames(), ",", "", "");
+        String values = StringUtils.collectionToDelimitedString(input.getValues(), ",", "'", "'");
+        template.update(String.format("INSERT INTO %s (%s) VALUES(%s)", tableName, tableNames, values));
     }
 
     @Override
@@ -113,14 +101,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
         tableNames.deleteCharAt(tableNames.length() - 1);
         return tableNames;
-    }
-
-    private String getValuesFormated(DataSet input, String format) {
-        StringBuilder values = new StringBuilder();
-        for (Object value : input.getValues()) {
-            values.append(String.format(format, value));
-        }
-        return values.substring(0, values.length() - 1);
     }
 
     @Override
@@ -175,14 +155,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public boolean isConnected() {
         return connection != null;
-    }
-
-    private String getNameFormatted(DataSet newValue, String format) {
-        StringBuilder string = new StringBuilder("");
-        for (String name : newValue.getNames()) {
-            string.append(String.format(format, name));
-        }
-        return string.substring(0, string.length() - 1);
     }
 
     @Override
