@@ -11,6 +11,9 @@ import ua.com.juja.sqlcmd.service.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -84,6 +87,80 @@ public class MainController {
             String tableName = request.getParameter("table");
             model.addAttribute("table", service.find(getManager(session), tableName));
             return "find";
+        }
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String createGet(HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        if (manager == null) {
+            return "redirect:connect";
+        }
+        return "create";
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String createPost(HttpServletRequest request, HttpSession session, Model model) {
+        String tableName = request.getParameter("tablename");
+        List<String> columnList = new ArrayList<>();
+        for (int index = 0; index < 3; index++) {
+            columnList.add(request.getParameter(String.format("column%d",index+1)));
+        }
+        try {
+            DatabaseManager manager = getManager(session);
+            if (manager.isTableExists(tableName)) {
+                throw new IllegalArgumentException(String.format("Таблица %s уже существует", tableName));
+            }
+            manager.create(tableName, columnList);
+            model.addAttribute("message", String.format("Table %s was successfully created", tableName));
+            model.addAttribute("tables", service.tables(manager));
+            return "tables";
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/clear", method = RequestMethod.GET)
+    public String clear(HttpServletRequest request, HttpSession session, Model model) {
+        DatabaseManager manager = getManager(session);
+        if (manager == null) {
+            return "redirect:connect";
+        }
+        else {
+            String tableName = request.getParameter("table");
+            try {
+                manager.clear(tableName);
+                model.addAttribute("message", String.format("Table %s was successfully cleared", tableName));
+                model.addAttribute("tables", service.tables(manager));
+                return "tables";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "menu";
+            }
+        }
+    }
+
+    @RequestMapping(value = "/drop", method = RequestMethod.GET)
+    public String drop(HttpServletRequest request, HttpSession session, Model model) {
+        DatabaseManager manager = getManager(session);
+        if (manager == null) {
+            return "redirect:connect";
+        } else {
+            String tableName = request.getParameter("table");
+
+            try {
+                if (!manager.isTableExists(tableName)) {
+                    //TODO
+                    throw new IllegalArgumentException(String.format("Таблицы %s не существует", tableName));
+                }
+                manager.drop(tableName);
+                model.addAttribute("message", String.format("Table %s was successfully deleted", tableName));
+                model.addAttribute("tables", service.tables(manager));
+                return "tables";
+
+            } catch (SQLException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
         }
     }
 
