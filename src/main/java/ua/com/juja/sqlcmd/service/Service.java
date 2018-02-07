@@ -1,7 +1,7 @@
 package ua.com.juja.sqlcmd.service;
 
 import ua.com.juja.sqlcmd.model.DatabaseManager;
-import ua.com.juja.sqlcmd.model.UserAction;
+import ua.com.juja.sqlcmd.model.entity.UserAction;
 
 import java.util.List;
 import java.util.Set;

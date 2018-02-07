@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
-import ua.com.juja.sqlcmd.model.UserAction;
-import ua.com.juja.sqlcmd.model.UserActionsDao;
+import ua.com.juja.sqlcmd.model.entity.UserAction;
+import ua.com.juja.sqlcmd.model.UserActionRepository;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public abstract class ServiceImpl implements Service{
     abstract protected DatabaseManager getManager();
 
     @Autowired
-    private UserActionsDao userActions;
+    private UserActionRepository userActions;
 
     @Override
     public List<String> commandsList() {
@@ -27,7 +27,7 @@ public abstract class ServiceImpl implements Service{
     public DatabaseManager connect(String databaseName, String userName, String password) {
         DatabaseManager manager = getManager();
         manager.connect(databaseName, userName, password);
-        userActions.log(userName, databaseName, "CONNECT");
+        userActions.save(new UserAction(userName, databaseName, "CONNECT"));
         return manager;
     }
 
@@ -48,14 +48,14 @@ public abstract class ServiceImpl implements Service{
             }
         }
 
-        userActions.log(manager.getUserName(), manager.getDatabaseName(), String.format("FIND(%s)", tableName));
+        userActions.save(new UserAction(manager.getUserName(), manager.getDatabaseName(), String.format("FIND(%s)", tableName)));
 
         return result;
     }
 
     @Override
     public Set<String> tables(DatabaseManager manager) {
-        userActions.log(manager.getUserName(), manager.getDatabaseName(), "TABLES");
+        userActions.save(new UserAction(manager.getUserName(), manager.getDatabaseName(), "TABLES"));
         return manager.getTableNames();
     }
 
@@ -65,7 +65,7 @@ public abstract class ServiceImpl implements Service{
             throw new IllegalArgumentException("User name can't be null");
         }
 
-        return userActions.getAll(userName);
+        return userActions.findByUserName(userName);
     }
 
 }

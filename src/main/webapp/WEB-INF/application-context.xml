@@ -2,17 +2,36 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
 
     <!--<context:property-placeholder location="classpath:/database.properties" />-->
     <context:annotation-config/>
     <context:component-scan base-package="ua.com.juja.sqlcmd.service" />
     <context:component-scan base-package="ua.com.juja.sqlcmd.model" />
-    <context:component-scan base-package="ua.com.juja.sqlcmd.controller.web" />
+
+    <jpa:repositories base-package="ua.com.juja.sqlcmd.model" entity-manager-factory-ref="factoryBean" />
+
+    <bean id="factoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+          <property name="packagesToScan" value="ua.com.juja.sqlcmd.model.entity" />
+        <property name="dataSource" ref="logDataSource"/>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+            </props>
+        </property>
+
+        <property name="persistenceProvider">
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean>
+        </property>
+    </bean>
 
     <!--<bean id="databaseManager" class="ua.com.juja.sqlcmd.model.JDBCDatabaseManager">-->
     <!--</bean>-->
@@ -30,6 +49,8 @@
     </bean>
 
     <context:property-placeholder location="classpath:log.jdbc.properties" />
+    
+
 
 
 
