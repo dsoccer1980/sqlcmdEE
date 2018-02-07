@@ -83,11 +83,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void update(String tableName, DataSet input, DataSet condition) throws SQLException {
         StringBuilder tableNames = getFormattedStringForSQLQuery(input);
         StringBuilder conditionNames = getFormattedStringForSQLQuery(condition);
-        String sql = "Update " + tableName + " SET " + tableNames + " Where " + conditionNames;
-
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
-        }
+        template.update(String.format("Update %s SET %s Where %s", tableName, tableNames, conditionNames));
     }
 
     private StringBuilder getFormattedStringForSQLQuery(DataSet input) {
@@ -139,17 +135,13 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public Set<String> getTableColumns(String tableName) {
         String sqlSelect = "SELECT * FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '" + tableName + "'";
-        Set<String> tables = new LinkedHashSet<>();
-
-        try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sqlSelect)) {
-            while (rs.next()) {
-                tables.add(rs.getString("column_name"));
-            }
-            return tables;
-        } catch (SQLException e) {
-            return tables;
-        }
+        return new LinkedHashSet<>(template.query(sqlSelect,
+                new RowMapper<String>() {
+                    @Override
+                    public String mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+                        return resultSet.getString("column_name");
+                    }
+                }));
     }
 
     @Override
