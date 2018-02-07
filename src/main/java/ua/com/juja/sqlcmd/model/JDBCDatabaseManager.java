@@ -15,6 +15,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
     private Configuration configuration = new Configuration();
     private JdbcTemplate template;
+    private String databaseName;
+    private String userName;
 
     @Override
     public List<DataSet> getTableData(String tableName) {
@@ -59,6 +61,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     String.format("%s://%s:%s/%s?loggerLevel=OFF",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
                     user,password);
             template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
+            this.databaseName = database;
+            this.userName = user;
         } catch (SQLException e) {
             connection = null;
             template =null;
@@ -179,5 +183,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
     }
 }

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
+import ua.com.juja.sqlcmd.model.UserAction;
+import ua.com.juja.sqlcmd.model.UserActionsDao;
 
 import java.util.*;
 
@@ -12,6 +14,9 @@ public abstract class ServiceImpl implements Service{
 
     @Autowired
     abstract protected DatabaseManager getManager();
+
+    @Autowired
+    private UserActionsDao userActions;
 
     @Override
     public List<String> commandsList() {
@@ -22,6 +27,7 @@ public abstract class ServiceImpl implements Service{
     public DatabaseManager connect(String databaseName, String userName, String password) {
         DatabaseManager manager = getManager();
         manager.connect(databaseName, userName, password);
+        userActions.log(userName, databaseName, "CONNECT");
         return manager;
     }
 
@@ -42,12 +48,24 @@ public abstract class ServiceImpl implements Service{
             }
         }
 
+        userActions.log(manager.getUserName(), manager.getDatabaseName(), String.format("FIND(%s)", tableName));
+
         return result;
     }
 
     @Override
     public Set<String> tables(DatabaseManager manager) {
+        userActions.log(manager.getUserName(), manager.getDatabaseName(), "TABLES");
         return manager.getTableNames();
+    }
+
+    @Override
+    public List<UserAction> getAll(String userName) {
+        if (userName == null) {
+            throw new IllegalArgumentException("User name can't be null");
+        }
+
+        return userActions.getAll(userName);
     }
 
 }

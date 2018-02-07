@@ -31,4 +31,8 @@ public interface DatabaseManager {
     boolean delete(String tableName, List<String> columnAndValue) throws SQLException;
 
     boolean isRowExists(String tableName, List<String> columnAndValue);
+
+    String getDatabaseName();
+
+    String getUserName();
 }

@@ -1,6 +1,7 @@
 package ua.com.juja.sqlcmd.service;
 
 import ua.com.juja.sqlcmd.model.DatabaseManager;
+import ua.com.juja.sqlcmd.model.UserAction;
 
 import java.util.List;
 import java.util.Set;
@@ -14,4 +15,6 @@ public interface Service {
     List<List<String>> find(DatabaseManager manager, String tableName);
 
     Set<String> tables(DatabaseManager manager);
+
+    List<UserAction> getAll(String userName);
 }
