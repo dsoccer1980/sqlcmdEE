@@ -3,6 +3,7 @@ package ua.com.juja.sqlcmd.model.entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "user_actions")
 public class UserAction {
 
     @Id
