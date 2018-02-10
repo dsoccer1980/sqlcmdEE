@@ -3,7 +3,9 @@ package ua.com.juja.sqlcmd.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.model.DataSet;
+import ua.com.juja.sqlcmd.model.DatabaseConnectionRepository;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
+import ua.com.juja.sqlcmd.model.entity.DatabaseConnection;
 import ua.com.juja.sqlcmd.model.entity.UserAction;
 import ua.com.juja.sqlcmd.model.UserActionRepository;
 
@@ -18,6 +20,9 @@ public abstract class ServiceImpl implements Service{
     @Autowired
     private UserActionRepository userActions;
 
+    @Autowired
+    private DatabaseConnectionRepository databaseConnections;
+
     @Override
     public List<String> commandsList() {
         return Arrays.asList("help", "tables", "create");
@@ -27,7 +32,8 @@ public abstract class ServiceImpl implements Service{
     public DatabaseManager connect(String databaseName, String userName, String password) {
         DatabaseManager manager = getManager();
         manager.connect(databaseName, userName, password);
-        userActions.save(new UserAction(userName, databaseName, "CONNECT"));
+
+        saveAction(databaseName, userName, "CONNECT");
         return manager;
     }
 
@@ -48,14 +54,14 @@ public abstract class ServiceImpl implements Service{
             }
         }
 
-        userActions.save(new UserAction(manager.getUserName(), manager.getDatabaseName(), String.format("FIND(%s)", tableName)));
+        saveAction(manager.getDatabaseName(), manager.getUserName(), String.format("FIND(%s)", tableName));
 
         return result;
     }
 
     @Override
     public Set<String> tables(DatabaseManager manager) {
-        userActions.save(new UserAction(manager.getUserName(), manager.getDatabaseName(), "TABLES"));
+        saveAction(manager.getDatabaseName(), manager.getUserName(), "TABLES");
         return manager.getTableNames();
     }
 
@@ -66,6 +72,14 @@ public abstract class ServiceImpl implements Service{
         }
 
         return userActions.findByUserName(userName);
+    }
+
+    private void saveAction(String databaseName, String userName, String action) {
+        DatabaseConnection databaseConnection = databaseConnections.findByUserNameAndDbName(userName, databaseName);
+        if (databaseConnection == null) {
+            databaseConnection = databaseConnections.save(new DatabaseConnection(userName, databaseName));
+        }
+        userActions.save(new UserAction(action, databaseConnection));
     }
 
 }

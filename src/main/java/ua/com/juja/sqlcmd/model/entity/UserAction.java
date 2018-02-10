@@ -13,30 +13,17 @@ public class UserAction {
     @Column(name = "action")
     private String action;
 
+    @JoinColumn(name = "database_connection_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DatabaseConnection databaseConnection;
+
     public UserAction() {
         //do nothing
     }
 
-    public UserAction(String userName, String dbName, String action) {
-        this.userName = userName;
-        this.dbName = dbName;
+    public UserAction(String action, DatabaseConnection databaseConnection) {
         this.action = action;
-    }
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+        this.databaseConnection = databaseConnection;
     }
 
     public String getAction() {
@@ -49,5 +36,17 @@ public class UserAction {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public DatabaseConnection getDatabaseConnection() {
+        return databaseConnection;
+    }
+
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 }
