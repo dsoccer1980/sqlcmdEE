@@ -16,6 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.1.1.RELEASE</spring.version>
         <jetty.version>8.1.3.v20120416</jetty.version>
+        <jackson.version>2.9.4</jackson.version>
     </properties>
 
 
@@ -100,6 +101,19 @@
             <artifactId>reflections</artifactId>
             <version>0.9.10</version>
         </dependency>
+
+        <!--Json serializer-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
 
 
         <!--jetty-->

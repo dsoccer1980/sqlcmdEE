@@ -60,12 +60,6 @@ public class MainController {
         return "help";
     }
 
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public String menu(Model model) {
-        model.addAttribute("items", service.commandsList());
-        return "/menu";
-    }
-
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
     public String tables(HttpSession session, Model model) {
         DatabaseManager manager = getManager(session);

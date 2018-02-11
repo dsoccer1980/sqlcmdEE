@@ -10,8 +10,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <context:component-scan base-package="ua.com.juja.sqlcmd.controller" />
 
-
-
     <mvc:annotation-driven/>
 
     <mvc:resources mapping="/resources/**" location="/resources/" />
@@ -21,6 +19,16 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <property name="prefix" value="/view/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/**">urlFilenameViewController</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="urlFilenameViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 
 </beans>
 
