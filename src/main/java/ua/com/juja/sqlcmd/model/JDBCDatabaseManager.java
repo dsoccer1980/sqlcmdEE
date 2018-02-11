@@ -1,5 +1,6 @@
 package ua.com.juja.sqlcmd.model;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -11,12 +12,21 @@ import java.sql.*;
 import java.util.*;
 
 @Component
+@Scope(value = "prototype")
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
     private Configuration configuration = new Configuration();
     private JdbcTemplate template;
     private String databaseName;
     private String userName;
+
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Please add jdbc jar to project", e);
+        }
+    }
 
     @Override
     public List<DataSet> getTableData(String tableName) {
@@ -49,13 +59,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void connect(String database, String user, String password) {
         try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Please add jdbc jar to project", e);
-        }
-        try {
             if (connection != null) {
                 connection.close();
+                connection = null;
             }
             connection = DriverManager.getConnection(
                     String.format("%s://%s:%s/%s?loggerLevel=OFF",configuration.getDriver(),configuration.getServerName(),configuration.getPort(),database),
