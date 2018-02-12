@@ -11,10 +11,10 @@
 
     <body>
         <div id="help_container">
-            Существующие комманды:  <br>
-            <div id="commands">
+            Существующие комманды:
+            <div style="padding-left: 26px">
                  <div id="loading">Loading...</div>
-                <dl>
+                <dl id="commands" style="margin-top: 0px">
                     <script id="descriptionRow" type="text/x-jquery-tmpl">
                         <dt>{{= command}}</dt>
                         <dd>{{= description}}</dd>
