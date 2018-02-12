@@ -55,11 +55,6 @@ public class MainController {
         }
     }
 
-    @RequestMapping(value = "/help", method = RequestMethod.GET)
-    public String help() {
-        return "help";
-    }
-
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
     public String tables(HttpSession session, Model model) {
         DatabaseManager manager = getManager(session);

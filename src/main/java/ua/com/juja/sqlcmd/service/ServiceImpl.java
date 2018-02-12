@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
+import ua.com.juja.sqlcmd.model.entity.Description;
 import ua.com.juja.sqlcmd.model.entity.UserAction;
 import ua.com.juja.sqlcmd.model.UserActionRepository;
 
@@ -21,6 +22,17 @@ public abstract class ServiceImpl implements Service{
     @Override
     public List<String> commandsList() {
         return Arrays.asList("help", "tables", "create");
+    }
+
+    @Override
+    public List<Description> commandsDescription() {
+        return Arrays.asList(
+                new Description("connection", "Для подключения к базе данных"),
+                new Description("tables", "Вывод списка всех таблиц базы данных, к которой подключились"),
+                new Description("find", "Получить содержимое выбранной таблицы"),
+                new Description("action", "Просмотр активностей пользователя"),
+                new Description("help", "Список доступных комманд")
+        );
     }
 
     @Override
