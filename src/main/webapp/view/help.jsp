@@ -10,16 +10,16 @@
     </head>
 
     <body>
-        <div id="help_container">
+        <div id="help">
             Существующие комманды:
             <div style="padding-left: 26px">
                  <div id="loading">Loading...</div>
-                <dl id="commands" style="margin-top: 0px">
-                    <script id="descriptionRow" type="text/x-jquery-tmpl">
-                        <dt>{{= command}}</dt>
-                        <dd>{{= description}}</dd>
-                    </script>
-                </dl>
+                      <dl class="container" style="margin-top: 0px">
+                            <row-template style="display: none">
+                                  <dt>{{= command}}</dt>
+                                  <dd>{{= description}}</dd>
+                             </row-template>
+                      </dl>
             </div>
         </div>
 

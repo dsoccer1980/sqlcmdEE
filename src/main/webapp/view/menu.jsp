@@ -5,11 +5,17 @@
     <head>
         <title>Help</title>
         <script type="text/javascript" src="${ctx}/resources/js/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src="${ctx}/resources/js/jquery.tmpl.js"></script>
         <script type="text/javascript" src="${ctx}/resources/js/menu.js"></script>
     </head>
      <body>
-         <div id="menu_container">
-             <div id="loading">Loading...</div>
+         <div id="menu">
+                     <div id="loading">Loading...</div>
+                     <div class="container" style="margin-top: 0px">
+                        <row-template style="display: none">
+                            <a href="{{= $data}}">{{= $data}}</a><br>
+                          </row-template>
+                      </div>
          </div>
 
      </body>
