@@ -61,10 +61,8 @@ public class MainController {
         if (manager == null) {
             return "redirect:connect";
         }
-        else {
-            model.addAttribute("tables", service.tables(manager));
-            return "tables";
-        }
+
+        return "tables";
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
