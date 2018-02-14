@@ -3,7 +3,7 @@
 <html>
     <c:set var="ctx" value="${pageContext.request.contextPath}"/>
     <head>
-        <title>Help</title>
+        <title>Menu</title>
         <script type="text/javascript" src="${ctx}/resources/js/jquery-3.3.1.js"></script>
         <script type="text/javascript" src="${ctx}/resources/js/jquery.tmpl.js"></script>
         <script type="text/javascript" src="${ctx}/resources/js/menu.js"></script>

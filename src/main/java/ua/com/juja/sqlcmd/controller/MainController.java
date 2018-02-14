@@ -73,8 +73,7 @@ public class MainController {
         }
         else {
             String tableName = request.getParameter("table");
-            model.addAttribute("table", service.find(getManager(session), tableName));
-            return "find";
+            return "find?table="+tableName;
         }
     }
 

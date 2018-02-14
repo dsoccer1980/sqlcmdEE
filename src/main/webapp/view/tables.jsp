@@ -3,7 +3,7 @@
 <html>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <head>
-    <title>Help</title>
+    <title>Tables</title>
     <script type="text/javascript" src="${ctx}/resources/js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/jquery.tmpl.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/tables.js"></script>
@@ -13,7 +13,7 @@
     <div id="loading">Loading...</div>
     <div class="container" style="margin-top: 0px">
         <row-template style="display: none">
-            <a href="{{= $data}}">{{= $data}}</a><br>
+            <a href="find?table={{= $data}}">{{= $data}}</a><br>
         </row-template>
     </div>
 </div>
