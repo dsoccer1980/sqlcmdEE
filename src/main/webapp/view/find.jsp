@@ -10,20 +10,20 @@
 </head>
 <body>
 <div id="find">
+
     <div id="loading">Loading...</div>
-    <div class="container" style="margin-top: 0px">
-        <row-template style="display: none">
-             <table border="1">
+    <table border="1" class="container">
+        <script id="temp" type="text/x-jquery-tmpl">
                 <tr>
-                    <%--{{each $data}}--%>
+                    {{each $data}}
                         <td>
-                            {{= $data}}
+                            {{= this}}
                         </td>
 
                 </tr>
-               </table>
-        </row-template>
-    </div>
+
+        </script>
+    </table>
 </div>
 
 </body>

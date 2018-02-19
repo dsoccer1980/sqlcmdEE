@@ -13,7 +13,7 @@
     <div id="loading">Loading...</div>
     <div class="container" style="margin-top: 0px">
         <row-template style="display: none">
-            <a href="find?table={{= $data}}">{{= $data}}</a><br>
+            <a href="find/{{= $data}}">{{= $data}}</a><br>
         </row-template>
     </div>
 </div>

@@ -65,15 +65,16 @@ public class MainController {
         return "tables";
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public String find(HttpServletRequest request, HttpSession session, Model model) {
+    @RequestMapping(value = "/find/{table}", method = RequestMethod.GET)
+    public String find(@PathVariable(value = "table") String table,
+                       HttpServletRequest request, HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
             return "redirect:connect";
         }
         else {
             String tableName = request.getParameter("table");
-            return "find?table="+tableName;
+            return "find";
         }
     }
 

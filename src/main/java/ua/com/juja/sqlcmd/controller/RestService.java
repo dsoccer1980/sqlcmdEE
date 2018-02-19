@@ -41,15 +41,15 @@ public class RestService {
         }
     }
 
-    @RequestMapping(value = "/find/content", method = RequestMethod.GET)
-    public List<List<String>> find(HttpServletRequest request, HttpSession session) {
-        DatabaseManager manager = getManager(session);
+    @RequestMapping(value = "/find/{table}/content", method = RequestMethod.GET)
+    public List<List<String>> find(@PathVariable(value = "table") String table,
+                                   HttpServletRequest request) {
+        DatabaseManager manager = getManager(request.getSession());
         if (manager == null) {
             return new LinkedList<>();
         }
         else {
-            String tableName = request.getParameter("table");
-            return service.find(getManager(session), tableName);
+            return service.find(manager, table);
         }
     }
 
