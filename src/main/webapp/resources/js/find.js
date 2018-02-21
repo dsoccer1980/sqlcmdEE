@@ -6,7 +6,7 @@ $(window).on('load',function() {
     $.get('/sqlcmd/find/' + tableName +'/content', function(elements) {
         $("#loading").hide();
 
-        $('#find #temp').tmpl(elements).appendTo('#find .container');
+        $('#find script[template="row"]').tmpl(elements).appendTo('#find .container');
 
     });
 });

@@ -13,7 +13,7 @@
 
     <div id="loading">Loading...</div>
     <table border="1" class="container">
-        <script id="temp" type="text/x-jquery-tmpl">
+        <script template="row" type="text/x-jquery-tmpl">
                 <tr>
                     {{each $data}}
                         <td>

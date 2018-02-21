@@ -14,12 +14,14 @@
             Существующие комманды:
             <div style="padding-left: 26px">
                  <div id="loading">Loading...</div>
+
                       <dl class="container" style="margin-top: 0px">
-                            <row-template style="display: none">
+                          <script template="row" type="text/x-jquery-tmpl">
                                   <dt>{{= command}}</dt>
                                   <dd>{{= description}}</dd>
-                             </row-template>
+                               </script>
                       </dl>
+
             </div>
         </div>
 

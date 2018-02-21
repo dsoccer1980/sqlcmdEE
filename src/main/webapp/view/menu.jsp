@@ -11,11 +11,13 @@
      <body>
          <div id="menu">
                      <div id="loading">Loading...</div>
+
                      <div class="container" style="margin-top: 0px">
-                        <row-template style="display: none">
+                         <script template="row" type="text/x-jquery-tmpl">
                             <a href="{{= $data}}">{{= $data}}</a><br>
-                          </row-template>
+                          </script>
                       </div>
+
          </div>
 
      </body>
