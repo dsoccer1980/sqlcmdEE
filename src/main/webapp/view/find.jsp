@@ -19,7 +19,7 @@
                         <td>
                             {{= this}}
                         </td>
-
+                    {{/each}}
                 </tr>
 
         </script>
