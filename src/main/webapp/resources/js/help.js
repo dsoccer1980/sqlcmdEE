@@ -1,8 +1,6 @@
-$(window).on('load',function() {
-
-    $.get('help/content', function(elements) {
+function initHelp(ctx) {
+    $.get(ctx + "/help/content", function (elements) {
         $("#loading").hide();
-            var container = $("#commands");
-            $('#help script[template="row"]').tmpl(elements).appendTo('#help .container');
+        $('#help script[template="row"]').tmpl(elements).appendTo('#help .container');
     });
-});
+}
