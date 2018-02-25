@@ -15,6 +15,5 @@
  Column3 <input type="text" name="column3" id="column3"> <br>
   <input type="submit" value="create" id="create">
 </form>
-<%@include file="footer.jsp" %>
 
 </body>

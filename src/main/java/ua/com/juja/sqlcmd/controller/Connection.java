@@ -2,16 +2,16 @@ package ua.com.juja.sqlcmd.controller;
 
 public class Connection {
 
-    private String dbName;
+    private String database;
     private String userName;
     private String password;
 
-    public String getDbName() {
-        return dbName;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     public String getUserName() {

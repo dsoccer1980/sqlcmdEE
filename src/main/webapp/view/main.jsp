@@ -8,20 +8,20 @@
          <script type="text/javascript" src="${ctx}/resources/js/jquery.tmpl.js"></script>
           <script type="text/javascript" src="${ctx}/resources/js/main.js"></script>
         <script type="text/javascript">
-            $(window).load(function(){
+            $(window).on('load', function(){
                 init('${ctx}');
             });
         </script>
     </head>
     <body>
-        <div id="loading">Loading...</div>
-
+        <div id="loading" style="display:none;">Loading... </div>
 
         <%@include file="menu.jsp" %>
         <%@include file="help.jsp" %>
         <%@include file="tables.jsp" %>
         <%@include file="find.jsp" %>
-        <%@include file="footer.jsp" %>
+        <%@include file="connect.jsp" %>
+        <%@include file="actions.jsp" %>
 
     </body>
 </html>

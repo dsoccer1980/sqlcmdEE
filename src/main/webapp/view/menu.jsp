@@ -2,11 +2,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
  <div id="menu">
-             <div class="container" style="margin-top: 0px">
+             <div class="container">
                  <script template="row" type="text/x-jquery-tmpl">
-                    <a href="{{= $data}}">{{= $data}}</a><br>
+                    <a href="#/{{= $data}}">{{= $data}}</a><br>
                   </script>
               </div>
-
  </div>
 

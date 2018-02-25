@@ -6,9 +6,6 @@
 </head>
 <body>
  Something was wrong.
-<%@include file="footer.jsp" %>
-
-
 
 </body>
 </html>

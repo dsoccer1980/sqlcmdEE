@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div id="tables">
-    <div class="container" style="margin-top: 0px">
+    <div class="container">
         <script template="row" type="text/x-jquery-tmpl">
-            <a href="find/{{= $data}}">{{= $data}}</a><br>
+            <a href="#/find/{{= $data}}">{{= $data}}</a><br>
         </script>
     </div>
 </div>
