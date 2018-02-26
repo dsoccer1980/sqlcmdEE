@@ -9,10 +9,8 @@ import ua.com.juja.sqlcmd.service.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.sql.SQLException;
+import java.util.*;
 
 @RestController
 public class RestService {
@@ -83,6 +81,27 @@ public class RestService {
     @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
     public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
         return service.getAll(userName);
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.PUT)
+    public String create(HttpServletRequest request,
+                             @ModelAttribute("table") Table table)
+    {
+        String tableName = table.getTableName();
+        List<String> columnList = new ArrayList<>();
+        for (int index = 0; index < 3; index++) {
+            columnList.add(request.getParameter(String.format("column%d",index+1)));
+        }
+        try {
+            DatabaseManager manager = getManager(request.getSession());
+            if (manager.isTableExists(tableName)) {
+                return (String.format("Table %s already exists", tableName));
+            }
+            manager.create(tableName, columnList);
+            return String.format("Table %s was successfully created", tableName);
+        } catch (SQLException e) {
+            return e.getMessage();
+        }
     }
 
     private DatabaseManager getManager(HttpSession session) {

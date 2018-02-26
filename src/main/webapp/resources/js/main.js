@@ -71,6 +71,20 @@ function init(ctx) {
         });
     };
 
+    var initCreate = function() {
+        isConnected("create/", function() {
+            $("#tablename").val("");
+            $("#column1").val("");
+            $("#column2").val("");
+            $("#column3").val("");
+            $('#messageCreate').hide();
+            $('#messageCreate').html("");
+            $("#loading").hide(300, function () {
+                $('#create-form').show();
+            });
+        });
+    };
+
     var initHelp = function() {
         show('#help');
 
@@ -100,6 +114,7 @@ function init(ctx) {
         $('#help').hide();
         $('#actions').hide();
         $('#connecting-form').hide();
+        $('#create-form').hide();
     };
 
     var loadPage = function(data) {
@@ -119,6 +134,8 @@ function init(ctx) {
             initConnect();
         } else if (page == 'actions') {
             initActions(data[1]);
+        } else if (page == 'create') {
+            initCreate();
         } else {
             window.location.hash = "/menu";
         }
@@ -154,6 +171,24 @@ function init(ctx) {
                     $('#error').html(message);
                     $('#error').show();
                 }
+            }
+        });
+    });
+
+    $('#create').click(function() {
+        var table = {};
+        table.tableName = $("#tablename").val();
+        table.column1 = $("#column1").val();
+        table.column2 = $("#column2").val();
+        table.column3 = $("#column3").val();
+
+        $.ajax({
+            url: ctx + "/create",
+            data: table,
+            type: 'PUT',
+            success: function(message) {
+                $('#messageCreate').html(message);
+                $('#messageCreate').show();
             }
         });
     });
