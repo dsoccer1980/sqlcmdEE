@@ -14,7 +14,7 @@ public class UserAction {
     private String action;
 
     @JoinColumn(name = "database_connection_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private DatabaseConnection databaseConnection;
 
     public UserAction() {

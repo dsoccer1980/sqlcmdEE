@@ -1,8 +1,8 @@
 package ua.com.juja.sqlcmd.service;
 
+import ua.com.juja.sqlcmd.controller.UserActionLog;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.model.entity.Description;
-import ua.com.juja.sqlcmd.model.entity.UserAction;
 
 import java.util.List;
 import java.util.Set;
@@ -19,5 +19,5 @@ public interface Service {
 
     Set<String> tables(DatabaseManager manager);
 
-    List<UserAction> getAll(String userName);
+    List<UserActionLog> getAll(String userName);
 }

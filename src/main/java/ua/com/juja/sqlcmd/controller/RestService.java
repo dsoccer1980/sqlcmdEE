@@ -80,10 +80,10 @@ public class RestService {
         }
     }
 
-//    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
-//    public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
-//        return service.getAllFor(userName);
-//    }
+    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
+    public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
+        return service.getAll(userName);
+    }
 
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("db_manager");

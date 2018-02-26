@@ -2,6 +2,7 @@ package ua.com.juja.sqlcmd.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ua.com.juja.sqlcmd.controller.UserActionLog;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
 import ua.com.juja.sqlcmd.model.entity.Description;
@@ -21,7 +22,7 @@ public abstract class ServiceImpl implements Service{
 
     @Override
     public List<String> commandsList() {
-        return Arrays.asList("help", "tables", "create");
+        return Arrays.asList("help", "tables", "create", "actions");
     }
 
     @Override
@@ -73,12 +74,19 @@ public abstract class ServiceImpl implements Service{
     }
 
     @Override
-    public List<UserAction> getAll(String userName) {
+    public List<UserActionLog> getAll(String userName) {
         if (userName == null) {
-            throw new IllegalArgumentException("User name can't be null");
+            throw new IllegalArgumentException("User name cant be null!");
         }
 
-        return userActions.findByUserName(userName);
+        List<UserAction> actions = userActions.findByUserName(userName);
+
+        List<UserActionLog> result = new LinkedList<>();
+        for (UserAction action : actions) {
+            result.add(new UserActionLog(action));
+        }
+
+        return result;
     }
 
 }
