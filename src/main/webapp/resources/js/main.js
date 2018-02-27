@@ -108,6 +108,7 @@ function init(ctx) {
     };
 
     var initClear = function(tableName) {
+        if (confirm("Are you sure to clear table '" + tableName + "'?" )){
             isConnected("clear/" + tableName, function() {
                 $.get(ctx + '/clear/' + tableName + '/content', function(message) {
                       $("#loading").hide(300, function() {
@@ -116,6 +117,10 @@ function init(ctx) {
                       });
                 });
             });
+        }
+        else {
+            window.location.hash = "/tables";
+        }
     };
 
     var hideAllScreens = function() {
