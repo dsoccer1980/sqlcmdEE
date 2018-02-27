@@ -116,6 +116,18 @@ public class RestService {
         }
     }
 
+    @RequestMapping(value = "/drop/{tableName}/content", method = RequestMethod.GET)
+    public String drop(@PathVariable(value = "tableName") String tableName,
+                        HttpServletRequest request)
+    {
+        try {
+            getManager(request.getSession()).drop(tableName);
+            return String.format("Table %s was successfully deleted", tableName);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("db_manager");
     }

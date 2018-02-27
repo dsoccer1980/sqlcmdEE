@@ -11,6 +11,9 @@
                 <td>
                     <a href="#/clear/{{= $data}}">clear</a><br>
                 </td>
+                <td>
+                    <a href="#/drop/{{= $data}}">drop</a><br>
+                </td>
             </tr>
         </script>
     </table>

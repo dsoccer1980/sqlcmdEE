@@ -112,9 +112,25 @@ function init(ctx) {
             isConnected("clear/" + tableName, function() {
                 $.get(ctx + '/clear/' + tableName + '/content', function(message) {
                       $("#loading").hide(300, function() {
-                          $('#messageClear').show();
-                          $('#messageClear').html(message);
+                          $('#messageText').show();
+                          $('#messageText').html(message);
                       });
+                });
+            });
+        }
+        else {
+            window.location.hash = "/tables";
+        }
+    };
+
+    var initDrop = function(tableName) {
+        if (confirm("Are you sure to drop table '" + tableName + "'?" )){
+            isConnected("drop/" + tableName, function() {
+                $.get(ctx + '/drop/' + tableName + '/content', function(message) {
+                    $("#loading").hide(300, function() {
+                        $('#messageText').show();
+                        $('#messageText').html(message);
+                    });
                 });
             });
         }
@@ -131,8 +147,8 @@ function init(ctx) {
         $('#actions').hide();
         $('#connecting-form').hide();
         $('#create-form').hide();
-        $('#messageClear').hide();
-        $('#messageClear').html("");
+        $('#messageText').hide();
+        $('#messageText').html("");
     };
 
     var loadPage = function(data) {
@@ -156,6 +172,8 @@ function init(ctx) {
             initCreate();
         } else if (page == 'clear') {
             initClear(data[1]);
+        } else if (page == 'drop') {
+                initDrop(data[1]);
         } else {
             window.location.hash = "/menu";
         }

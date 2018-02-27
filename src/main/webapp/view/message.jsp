@@ -2,6 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
  <div id="message">
-          <span id="messageClear"></span>
+          <span id="messageText"></span>
  </div>
 
