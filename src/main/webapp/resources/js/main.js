@@ -107,6 +107,17 @@ function init(ctx) {
         });
     };
 
+    var initClear = function(tableName) {
+            isConnected("clear/" + tableName, function() {
+                $.get(ctx + '/clear/' + tableName + '/content', function(message) {
+                      $("#loading").hide(300, function() {
+                          $('#messageClear').show();
+                          $('#messageClear').html(message);
+                      });
+                });
+            });
+    };
+
     var hideAllScreens = function() {
         $('#find').hide();
         $('#tables').hide();
@@ -115,6 +126,8 @@ function init(ctx) {
         $('#actions').hide();
         $('#connecting-form').hide();
         $('#create-form').hide();
+        $('#messageClear').hide();
+        $('#messageClear').html("");
     };
 
     var loadPage = function(data) {
@@ -136,6 +149,8 @@ function init(ctx) {
             initActions(data[1]);
         } else if (page == 'create') {
             initCreate();
+        } else if (page == 'clear') {
+            initClear(data[1]);
         } else {
             window.location.hash = "/menu";
         }

@@ -104,6 +104,18 @@ public class RestService {
         }
     }
 
+    @RequestMapping(value = "/clear/{tableName}/content", method = RequestMethod.GET)
+    public String clear(@PathVariable(value = "tableName") String tableName,
+                                   HttpServletRequest request)
+    {
+        try {
+            getManager(request.getSession()).clear(tableName);
+            return String.format("Table %s was successfully cleared", tableName);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("db_manager");
     }

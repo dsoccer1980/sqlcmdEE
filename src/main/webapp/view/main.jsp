@@ -23,6 +23,7 @@
         <%@include file="connect.jsp" %>
         <%@include file="actions.jsp" %>
         <%@include file="create.jsp" %>
+        <%@include file="message.jsp" %>
         <%@include file="footer.jsp" %>
 
     </body>
