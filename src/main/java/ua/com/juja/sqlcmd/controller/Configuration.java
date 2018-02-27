@@ -8,7 +8,7 @@ public class Configuration {
     private Properties properties;
 
     public Configuration() {
-        try(InputStream is = this.getClass().getClassLoader().getResourceAsStream("config/sqlcmd.properties")) {
+        try(InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties")) {
             properties = new Properties();
             properties.load(is);
         } catch (IOException e) {
