@@ -19,5 +19,5 @@ public interface Service {
 
     Set<String> tables(DatabaseManager manager);
 
-    List<UserActionLog> getAll(String userName);
+    List<UserActionLog> getAllActionsOfUser(String userName);
 }

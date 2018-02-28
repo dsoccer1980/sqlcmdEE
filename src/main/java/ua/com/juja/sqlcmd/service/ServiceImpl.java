@@ -74,7 +74,7 @@ public abstract class ServiceImpl implements Service{
     }
 
     @Override
-    public List<UserActionLog> getAll(String userName) {
+    public List<UserActionLog> getAllActionsOfUser(String userName) {
         if (userName == null) {
             throw new IllegalArgumentException("User name cant be null!");
         }

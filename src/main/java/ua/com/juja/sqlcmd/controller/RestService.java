@@ -80,7 +80,7 @@ public class RestService {
 
     @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
     public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
-        return service.getAll(userName);
+        return service.getAllActionsOfUser(userName);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.PUT)
