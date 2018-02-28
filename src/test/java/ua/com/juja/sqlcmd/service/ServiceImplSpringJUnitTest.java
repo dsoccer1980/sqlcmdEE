@@ -5,22 +5,41 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ua.com.juja.sqlcmd.controller.UserActionLog;
 import ua.com.juja.sqlcmd.model.DataSet;
 import ua.com.juja.sqlcmd.model.DataSetImpl;
 import ua.com.juja.sqlcmd.model.DatabaseManager;
+import ua.com.juja.sqlcmd.model.JDBCDatabaseManager;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-application-context.xml")
 public class ServiceImplSpringJUnitTest {
 
-    @Autowired
-    private ServiceImpl service;
+    private static final String DB_NAME = "sqlcmd";
+    private static final String DB_USER = "postgres";
+    private static final String DB_PASSWORD = "postgres";
+    DatabaseManager manager =new JDBCDatabaseManager();
 
+    @Autowired
+    private Service service;
+
+    @Test
+    public void testConnect() {
+        manager = service.connect(DB_NAME, DB_USER, DB_PASSWORD);
+        assertNotNull(manager);
+    }
+
+    @Test(expected = Exception.class)
+    public void testConnect_WithWrongData() throws Exception {
+        service.connect("wrong", "wrong", "wrong");
+    }
 
     @Test
     public void test(){
