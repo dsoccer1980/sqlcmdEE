@@ -1,6 +1,9 @@
 package ua.com.juja.sqlcmd.model;
 
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +14,12 @@ public interface DatabaseManager {
     Set<String> getTableNames();
 
     void connect(String database, String user, String password);
+
+    void connect(String user, String password);
+
+    void createDatabase(String dbName);
+
+    void dropDatabase(String dbName);
 
     void clear(String tableName) throws SQLException;
 
@@ -32,7 +41,13 @@ public interface DatabaseManager {
 
     boolean isRowExists(String tableName, List<String> columnAndValue);
 
+    void disconnect();
+
     String getDatabaseName();
 
     String getUserName();
+
+    void setConnection(Connection connection);
+
+    void setTemplate(JdbcTemplate template);
 }

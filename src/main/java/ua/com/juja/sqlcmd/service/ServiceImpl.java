@@ -9,6 +9,7 @@ import ua.com.juja.sqlcmd.model.entity.Description;
 import ua.com.juja.sqlcmd.model.entity.UserAction;
 import ua.com.juja.sqlcmd.model.UserActionRepository;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -39,7 +40,12 @@ public abstract class ServiceImpl implements Service{
     @Override
     public DatabaseManager connect(String databaseName, String userName, String password) {
         DatabaseManager manager = getManager();
-        manager.connect(databaseName, userName, password);
+        if (databaseName == null) {
+            manager.connect(userName, password);
+        }
+        else {
+            manager.connect(databaseName, userName, password);
+        }
 
         userActions.saveAction(databaseName, userName, "CONNECT");
         return manager;
@@ -74,6 +80,25 @@ public abstract class ServiceImpl implements Service{
     }
 
     @Override
+    public void createTable(DatabaseManager manager, String tableName, List<String> columnList) throws SQLException {
+            manager.create(tableName, columnList);
+        //TODO
+      //      userActions.saveAction(manager.getDatabaseName(), manager.getUserName(), "CREATE TABLE('" + tableName + "')");
+    }
+
+    @Override
+    public void createDatabase(DatabaseManager manager, String dbName) {
+        manager.createDatabase(dbName);
+        //      userActions.saveAction(manager.getDatabaseName(), manager.getUserName(), "CREATE DATABASE('" + dbName + "')");
+    }
+
+    @Override
+    public void dropDatabase(DatabaseManager manager, String dbName) {
+        manager.dropDatabase(dbName);
+        //      userActions.saveAction(manager.getDatabaseName(), manager.getUserName(), "DROP DATABASE('" + dbName + "')");
+    }
+
+    @Override
     public List<UserActionLog> getAllActionsOfUser(String userName) {
         if (userName == null) {
             throw new IllegalArgumentException("User name cant be null!");
@@ -87,6 +112,11 @@ public abstract class ServiceImpl implements Service{
         }
 
         return result;
+    }
+
+    @Override
+    public void disconnect() {
+        getManager().disconnect();
     }
 
 }

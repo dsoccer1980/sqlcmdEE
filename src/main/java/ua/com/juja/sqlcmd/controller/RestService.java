@@ -97,7 +97,8 @@ public class RestService {
             if (manager.isTableExists(tableName)) {
                 return (String.format("Table %s already exists", tableName));
             }
-            manager.create(tableName, columnList);
+
+            service.createTable(manager, tableName, columnList);
             return String.format("Table %s was successfully created", tableName);
         } catch (SQLException e) {
             return e.getMessage();

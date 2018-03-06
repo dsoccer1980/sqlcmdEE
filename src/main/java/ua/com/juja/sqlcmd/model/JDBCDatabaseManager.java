@@ -78,6 +78,36 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void connect(String user, String password) {
+        try {
+            if (connection != null) {
+                connection.close();
+                connection = null;
+            }
+            connection = DriverManager.getConnection(
+                    String.format("%s://%s:%s/?loggerLevel=OFF",configuration.getDriver(),configuration.getServerName(),configuration.getPort()),
+                    user,password);
+            template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
+            this.userName = user;
+        } catch (SQLException e) {
+            connection = null;
+            template =null;
+            throw new RuntimeException(String.format("Cant get connection for model: user: %s, password: %s. " , user, password), e);
+        }
+
+    }
+
+    @Override
+    public void createDatabase(String dbName) {
+        template.execute("CREATE DATABASE " + dbName);
+    }
+
+    @Override
+    public void dropDatabase(String dbName) {
+        template.execute("DROP DATABASE IF EXISTS " + dbName);
+    }
+
+    @Override
     public void clear(String tableName) throws SQLException {
         template.execute("DELETE FROM " + tableName);
     }
@@ -192,6 +222,16 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void disconnect() {
+        template.execute("SELECT pg_terminate_backend(pg_stat_activity.pid)\n" +
+                " FROM pg_stat_activity\n" +
+                " WHERE pg_stat_activity.datname = '" + getDatabaseName() + "'\n" +
+                "   AND pid <> pg_backend_pid();");
+        connection = null;
+        template = null;
+    }
+
+    @Override
     public String getDatabaseName() {
         return databaseName;
     }
@@ -199,5 +239,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public String getUserName() {
         return userName;
+    }
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public void setTemplate(JdbcTemplate template) {
+        this.template = template;
     }
 }
